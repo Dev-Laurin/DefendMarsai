@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform _cam; 
     [SerializeField] private GameObject _player; 
 
+    private GameObject _selectedPawn; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,9 +40,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void TileSelected(GameObject tile){
+        //see if a pawn is selected 
+        if(_selectedPawn){
+            //if tile is selectable when a pawn is selected, move the pawn there
+            _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
+        }
+    }
+
+    public void ShowAvailableMovement(GameObject pawn){
+        _selectedPawn = pawn; 
+        var movement = pawn.GetComponent<Pawn>().GetMovement(); 
+        //Dijkstra's algorithm to show paths.....
+
+        //TODO
+
+        ///
     }
 }

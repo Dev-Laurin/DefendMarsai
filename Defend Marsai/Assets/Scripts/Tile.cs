@@ -5,6 +5,12 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     private Color _oldMatColor; 
+    private GameObject _gameManager; 
+    private bool _selectible = false; 
+
+    void Start(){
+        _gameManager = GameObject.Find("GameManager"); 
+    }
 
     void OnMouseEnter(){
         var tileRenderer = gameObject.GetComponent<Renderer>(); 
@@ -14,6 +20,12 @@ public class Tile : MonoBehaviour
     
     void OnMouseExit(){
         gameObject.GetComponent<Renderer>().material.color = _oldMatColor; 
+    }
+
+    void OnMouseDown(){
+        if(_selectible){
+            _gameManager.GetComponent<GameManager>().TileSelected(gameObject); 
+        } 
     }
 
 }

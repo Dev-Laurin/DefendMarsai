@@ -6,15 +6,20 @@ public class Pawn : MonoBehaviour
 {
     //Stats
     [SerializeField] private string _name; 
-    [SerializeField] private int movement; 
+    [SerializeField] private int _movement; 
 
     //selection
     private Color _oldMatColor; 
     private bool isSelected; 
     private Renderer _renderer; 
+    private GameObject _gameManager; 
+
+    //UI
+    [SerializeField] private GameObject _portrait;
 
     void Start(){
         _renderer = gameObject.GetComponent<Renderer>(); 
+        _gameManager = GameObject.Find("GameManager"); 
     }
 
     void Highlight(bool selecting = false){
@@ -45,16 +50,35 @@ public class Pawn : MonoBehaviour
             Debug.Log($"Deselected {_name}"); 
             isSelected = false; 
             Unhighlight(); 
+            HidePortrait(); 
         }
         else{
             Debug.Log($"Selected {_name}"); 
             isSelected = true; 
             Highlight(isSelected);
             ShowAvailableMovement(); 
+            ShowPortrait(); 
         }
     }
 
+    void ShowPortrait(){
+        _portrait.SetActive(true); 
+    }
+
+    void HidePortrait(){
+        _portrait.SetActive(false); 
+    }
+
     void ShowAvailableMovement(){
-        Debug.Log($"{_name}'s movement is {movement}"); 
+        Debug.Log($"{_name}'s movement is {_movement}"); 
+        _gameManager.GetComponent<GameManager>().ShowAvailableMovement(gameObject); 
+    }
+
+    public int GetMovement(){
+        return _movement; 
+    }
+
+    public void MoveToTile(GameObject tile){
+        //TODO
     }
 }
