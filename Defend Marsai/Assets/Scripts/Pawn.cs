@@ -21,6 +21,7 @@ public class Pawn : MonoBehaviour
     private bool isSelected; 
     private Renderer _renderer; 
     private GameObject _gameManager; 
+    private bool _isEnemy = false; 
 
     //UI
     [SerializeField] private GameObject _portrait;
@@ -49,6 +50,10 @@ public class Pawn : MonoBehaviour
         fatigue.GetComponent<Slider>().value = _fatigue; 
         hp.GetComponent<Slider>().value = _hp; 
         name.GetComponent<TMPro.TextMeshProUGUI>().text = _name; 
+    }
+
+    public void SetAsEnemy(bool isEnemy){
+        _isEnemy = isEnemy; 
     }
 
     void Highlight(bool selecting = false){
@@ -117,11 +122,13 @@ public class Pawn : MonoBehaviour
     }
 
     public void MoveToTile(GameObject tile){
-        tile.GetComponent<Tile>().RevertToOriginalTilesMat(); 
-        _targetTile = tile;
-        _move = true; 
-        _currentTile.RevertToOriginalTilesMat(); 
-        _currentTile = _targetTile.GetComponent<Tile>(); 
+        if(!_isEnemy){
+            tile.GetComponent<Tile>().RevertToOriginalTilesMat(); 
+            _targetTile = tile;
+            _move = true; 
+            _currentTile.RevertToOriginalTilesMat(); 
+            _currentTile = _targetTile.GetComponent<Tile>(); 
+        }
         Deselect();
     }
 

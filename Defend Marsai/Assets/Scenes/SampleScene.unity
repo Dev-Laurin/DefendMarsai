@@ -2955,7 +2955,9 @@ MonoBehaviour:
   _width: 5
   _height: 5
   _cam: {fileID: 330585546}
-  _player: {fileID: 3170752887869082363, guid: b0dc13099c9154b3c92849cb24fcec40, type: 3}
+  _pawn: {fileID: 3170752887869082363, guid: b0dc13099c9154b3c92849cb24fcec40, type: 3}
+  _enemy: {fileID: 916316968987233905, guid: 75b574ec0518e4cf9881c2ca10a627f4, type: 3}
+  _enemyCount: 2
   portraits:
   - {fileID: 2125780986}
   _availableMat: {fileID: 2100000, guid: 928121b04cae9487f8e0b508f4104bf5, type: 2}

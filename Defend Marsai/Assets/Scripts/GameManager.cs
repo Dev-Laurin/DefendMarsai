@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     public GameObject tile; 
     [SerializeField] private int _width, _height; 
     [SerializeField] private Transform _cam; 
-    [SerializeField] private GameObject _player; 
+    [SerializeField] private GameObject _pawn; 
+    [SerializeField] private GameObject _enemy; 
+    [SerializeField] private int _enemyCount = 2; 
 
     private GameObject _selectedPawn; 
     private List<List<GameObject>> _map = new List<List<GameObject>>(); 
@@ -34,14 +36,28 @@ public class GameManager : MonoBehaviour
         GenerateMap(); 
         InstantiateCamera(); 
         InstantiatePawns(); 
+        InstantiateEnemies(); 
     }
 
     private void InstantiatePawns(){
-        var pawn = Instantiate(_player, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
+        var pawn = Instantiate(_pawn, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
         pawnScript.SetPortrait(portraits[0]); 
         pawnScript.SetUI(_strengthUI, _speedUI, _defenseUI, _willUI, _fatigueUI, _hpUI, _name); 
+    }
+
+    private void InstantiateEnemies(){
+        for(var i = 0; i<_enemyCount; i++){
+            var x = _map.Count - 1 - i; 
+            var z = _map[x].Count - 1 - i; 
+            var enemy = Instantiate(_enemy, new Vector3(x, tile.transform.position.y + 0.1f, z), Quaternion.identity); 
+            var enemyScript = enemy.GetComponent<Pawn>(); 
+            enemyScript.SetCurrentTile(_map[x][z].GetComponent<Tile>());
+            enemyScript.SetPortrait(portraits[0]); 
+            enemyScript.SetUI(_strengthUI, _speedUI, _defenseUI, _willUI, _fatigueUI, _hpUI, _name);
+            enemyScript.SetAsEnemy(true);
+        }
     }
 
     private void InstantiateCamera(){
