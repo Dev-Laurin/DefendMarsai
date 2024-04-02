@@ -17,6 +17,9 @@ public class Pawn : MonoBehaviour
     //UI
     [SerializeField] private GameObject _portrait;
 
+    //position
+    [SerializeField] private Tile _currentTile; 
+
     void Start(){
         _renderer = gameObject.GetComponent<Renderer>(); 
         _gameManager = GameObject.Find("GameManager"); 
@@ -71,6 +74,10 @@ public class Pawn : MonoBehaviour
 
     void ShowAvailableMovement(){
         Debug.Log($"{_name}'s movement is {_movement}"); 
+        var tile = GetTile(); 
+        var xcoord = tile.GetXCoord(); 
+        var zcoord = tile.GetZCoord(); 
+        Debug.Log($"{_name}'s tile is {xcoord}, {zcoord}"); 
         _gameManager.GetComponent<GameManager>().ShowAvailableMovement(gameObject); 
     }
 
@@ -80,5 +87,19 @@ public class Pawn : MonoBehaviour
 
     public void MoveToTile(GameObject tile){
         //TODO
+        Debug.Log($"Moving {_name} to {tile}"); 
+        
+    }
+
+    public Tile GetTile(){
+        return _currentTile; 
+    }
+
+    public void SetCurrentTile(Tile tile){
+        _currentTile = tile; 
+    }
+
+    public void SetPortrait(GameObject portrait){
+        _portrait = portrait; 
     }
 }

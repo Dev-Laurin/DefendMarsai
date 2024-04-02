@@ -70,3 +70,19 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Manually created 
+*.DS_Store
+/Blink/
+*.meta 
+/Shaders/
+/Sprites/
+/TextMesh Pro/
+/TutorialInfo/
+Library/
+Logs/
+Packages/
+ProjectSettings/
+Temp/
+UserSettings/
