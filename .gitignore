@@ -85,3 +85,5 @@ Packages/
 ProjectSettings/
 Temp/
 UserSettings/
+Settings/
+*.asset
