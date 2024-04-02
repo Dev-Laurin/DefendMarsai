@@ -74,12 +74,11 @@ crashlytics-build.properties
 
 # Manually created 
 *.DS_Store
-/Blink/
+Blink/
 *.meta 
-/Shaders/
-/Sprites/
-/TextMesh Pro/
-/TutorialInfo/
+Sprites/
+TextMesh Pro/
+TutorialInfo/
 Library/
 Logs/
 Packages/
