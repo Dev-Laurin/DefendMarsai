@@ -120,5 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 0}
+  _oldMat: {fileID: 2100000, guid: 54ffff8c2578bda49932bdb655e0b450, type: 2}
+  _oldMatIndex: 0
+  _olderMat: {fileID: 2100000, guid: 54ffff8c2578bda49932bdb655e0b450, type: 2}
+  _olderMatIndex: 0
   _type: 1
   _highlightMat: {fileID: 2100000, guid: 0de296bb054fa43df9534f279750a992, type: 2}

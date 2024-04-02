@@ -13,11 +13,10 @@ public class Tile : MonoBehaviour
 {
     private Color _oldMatColor; 
     private GameObject _gameManager; 
-    public TMPro.TextMeshProUGUI _text; 
-    private Material _oldMat; 
-    private int _oldMatIndex;
-    private Material _olderMat; 
-    private int _olderMatIndex;
+    public TextMesh _text; 
+    [SerializeField] private Material _oldMat; 
+    [SerializeField] private int _oldMatIndex;
+    [SerializeField] private Material _originalMat; 
     [SerializeField] private TileType _type; 
     private int _xcoord; 
     private int _zcoord; 
@@ -26,6 +25,9 @@ public class Tile : MonoBehaviour
 
     void Start(){
         _gameManager = GameObject.Find("GameManager"); 
+        _oldMatIndex = 0; 
+        _oldMat = gameObject.GetComponent<Renderer>().materials[0];
+        _originalMat = gameObject.GetComponent<Renderer>().materials[0];
     }
 
     public void HighlightTile(Color color){
@@ -36,9 +38,7 @@ public class Tile : MonoBehaviour
 
     public void ChangeTilesMat(Material material, int index){
         var meshRenderer = gameObject.GetComponent<Renderer>(); 
-        var materialsCopy = meshRenderer.materials; 
-        _olderMat = _oldMat; 
-        _olderMatIndex = _oldMatIndex; 
+        var materialsCopy = meshRenderer.materials;  
         _oldMat = materialsCopy[index]; 
         _oldMatIndex = index; 
         materialsCopy[index] = material; 
@@ -52,10 +52,11 @@ public class Tile : MonoBehaviour
         meshRenderer.materials = materialsCopy; 
     }
 
-    public void RevertRevertTilesMat(){
+    public void RevertToOriginalTilesMat(){
         var meshRenderer = gameObject.GetComponent<Renderer>(); 
         var materialsCopy = meshRenderer.materials; 
-        materialsCopy[_olderMatIndex] = _olderMat; 
+        _oldMat = _originalMat; 
+        materialsCopy[_oldMatIndex] = _originalMat; 
         meshRenderer.materials = materialsCopy; 
     }
 
@@ -77,8 +78,8 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown(){
         if(_selectable){
+            RevertToOriginalTilesMat();
             _gameManager.GetComponent<GameManager>().TileSelected(gameObject); 
-            RevertRevertTilesMat();
         } 
     }
 

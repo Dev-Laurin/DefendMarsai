@@ -18,11 +18,19 @@ public class Pawn : MonoBehaviour
     [SerializeField] private GameObject _portrait;
 
     //position
-    [SerializeField] private Tile _currentTile; 
+    [SerializeField] private Tile _currentTile;
+    private GameObject _targetTile;  
+
+    //movement
+    private CharacterController _controller; 
+    [SerializeField] private int _speed = 5; 
+    private float _step; 
+    private bool _move; 
 
     void Start(){
         _renderer = gameObject.GetComponent<Renderer>(); 
         _gameManager = GameObject.Find("GameManager"); 
+        _controller = gameObject.GetComponent<CharacterController>(); 
     }
 
     void Highlight(bool selecting = false){
@@ -48,19 +56,26 @@ public class Pawn : MonoBehaviour
         }
     }
 
+    private void Deselect(){
+        isSelected = false; 
+        Unhighlight(); 
+        HidePortrait(); 
+        _gameManager.GetComponent<GameManager>().DeselectedPawn(); 
+    }
+
+    private void Select(){
+        isSelected = true; 
+        Highlight(isSelected);
+        ShowAvailableMovement(); 
+        ShowPortrait(); 
+    }
+
     void OnMouseDown(){
         if(isSelected){
-            Debug.Log($"Deselected {_name}"); 
-            isSelected = false; 
-            Unhighlight(); 
-            HidePortrait(); 
+            Deselect(); 
         }
         else{
-            Debug.Log($"Selected {_name}"); 
-            isSelected = true; 
-            Highlight(isSelected);
-            ShowAvailableMovement(); 
-            ShowPortrait(); 
+            Select(); 
         }
     }
 
@@ -73,11 +88,9 @@ public class Pawn : MonoBehaviour
     }
 
     void ShowAvailableMovement(){
-        Debug.Log($"{_name}'s movement is {_movement}"); 
         var tile = GetTile(); 
         var xcoord = tile.GetXCoord(); 
         var zcoord = tile.GetZCoord(); 
-        Debug.Log($"{_name}'s tile is {xcoord}, {zcoord}"); 
         _gameManager.GetComponent<GameManager>().ShowAvailableMovement(gameObject); 
     }
 
@@ -86,9 +99,13 @@ public class Pawn : MonoBehaviour
     }
 
     public void MoveToTile(GameObject tile){
-        //TODO
-        Debug.Log($"Moving {_name} to {tile}"); 
-        
+        tile.GetComponent<Tile>().RevertToOriginalTilesMat(); 
+        _targetTile = tile;
+        _move = true; 
+        _currentTile.RevertToOriginalTilesMat(); 
+        _currentTile = _targetTile.GetComponent<Tile>(); 
+        _currentTile.RevertToOriginalTilesMat();
+        Deselect();
     }
 
     public Tile GetTile(){
@@ -101,5 +118,14 @@ public class Pawn : MonoBehaviour
 
     public void SetPortrait(GameObject portrait){
         _portrait = portrait; 
+    }
+
+    void Update(){
+        if(_move){
+            var step = _speed * Time.deltaTime; 
+            var target = _targetTile.transform.position; 
+            target.y = transform.position.y; 
+            transform.position = Vector3.MoveTowards(transform.position, target, step);
+        }
     }
 }
