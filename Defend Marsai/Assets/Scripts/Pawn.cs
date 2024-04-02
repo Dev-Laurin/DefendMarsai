@@ -1,12 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class Pawn : MonoBehaviour
 {
     //Stats
     [SerializeField] private string _name; 
     [SerializeField] private int _movement; 
+    [SerializeField] private int _strength;
+    [SerializeField] private int _speed = 5; 
+    [SerializeField] private int _defense; 
+    [SerializeField] private int _will; 
+    [SerializeField] private int _fatigue; 
+    [SerializeField] private int _hp; 
 
     //selection
     private Color _oldMatColor; 
@@ -16,6 +24,7 @@ public class Pawn : MonoBehaviour
 
     //UI
     [SerializeField] private GameObject _portrait;
+        
 
     //position
     [SerializeField] private Tile _currentTile;
@@ -23,7 +32,6 @@ public class Pawn : MonoBehaviour
 
     //movement
     private CharacterController _controller; 
-    [SerializeField] private int _speed = 5; 
     private float _step; 
     private bool _move; 
 
@@ -31,6 +39,16 @@ public class Pawn : MonoBehaviour
         _renderer = gameObject.GetComponent<Renderer>(); 
         _gameManager = GameObject.Find("GameManager"); 
         _controller = gameObject.GetComponent<CharacterController>(); 
+    }
+
+    public void SetUI(GameObject strength, GameObject speed, GameObject defense, GameObject will, GameObject fatigue, GameObject hp, GameObject name){
+        strength.GetComponent<TMPro.TextMeshProUGUI>().text = _strength.ToString(); 
+        speed.GetComponent<TMPro.TextMeshProUGUI>().text = _speed.ToString(); 
+        defense.GetComponent<TMPro.TextMeshProUGUI>().text = _defense.ToString(); 
+        will.GetComponent<TMPro.TextMeshProUGUI>().text = _will.ToString(); 
+        fatigue.GetComponent<Slider>().value = _fatigue; 
+        hp.GetComponent<Slider>().value = _hp; 
+        name.GetComponent<TMPro.TextMeshProUGUI>().text = _name; 
     }
 
     void Highlight(bool selecting = false){
@@ -104,7 +122,6 @@ public class Pawn : MonoBehaviour
         _move = true; 
         _currentTile.RevertToOriginalTilesMat(); 
         _currentTile = _targetTile.GetComponent<Tile>(); 
-        _currentTile.RevertToOriginalTilesMat();
         Deselect();
     }
 

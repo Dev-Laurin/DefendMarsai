@@ -120,5 +120,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Henry
   _movement: 2
+  _strength: 10
+  _speed: 6
+  _defense: 9
+  _will: 6
+  _fatigue: 0
+  _hp: 100
   _portrait: {fileID: 0}
   _currentTile: {fileID: 0}

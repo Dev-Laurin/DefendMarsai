@@ -17,6 +17,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Material _availableMat; 
     private List<Tile> _availableTiles; 
 
+    //UI
+    [SerializeField] private GameObject _strengthUI; 
+    [SerializeField] private GameObject _speedUI;
+    [SerializeField] private GameObject _defenseUI;
+    [SerializeField] private GameObject _willUI;
+    [SerializeField] private GameObject _fatigueUI;
+    [SerializeField] private GameObject _hpUI; 
+    [SerializeField] private GameObject _name; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +41,7 @@ public class GameManager : MonoBehaviour
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
         pawnScript.SetPortrait(portraits[0]); 
+        pawnScript.SetUI(_strengthUI, _speedUI, _defenseUI, _willUI, _fatigueUI, _hpUI, _name); 
     }
 
     private void InstantiateCamera(){
@@ -141,6 +151,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void DeselectedPawn(){
+        DeHighlightTiles(); 
         _selectedPawn = null; 
     }
     
