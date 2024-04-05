@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System; 
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,7 +27,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _willUI;
     [SerializeField] private GameObject _fatigueUI;
     [SerializeField] private GameObject _hpUI; 
-    [SerializeField] private GameObject _name; 
+    [SerializeField] private GameObject _nameUI; 
+    [SerializeField] private GameObject _portraitImage;
+    [SerializeField] private GameObject _classImage;
 
     // Start is called before the first frame update
     void Start()
@@ -42,9 +45,10 @@ public class GameManager : MonoBehaviour
     private void InstantiatePawns(){
         var pawn = Instantiate(_pawn, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
+        pawnScript.Start(); 
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
         pawnScript.SetPortrait(portraits[0]); 
-        pawnScript.SetUI(_strengthUI, _speedUI, _defenseUI, _willUI, _fatigueUI, _hpUI, _name); 
+        pawnScript.UpdateUI(); 
     }
 
     private void InstantiateEnemies(){
@@ -53,11 +57,24 @@ public class GameManager : MonoBehaviour
             var z = _map[x].Count - 1 - i; 
             var enemy = Instantiate(_enemy, new Vector3(x, tile.transform.position.y + 0.1f, z), Quaternion.identity); 
             var enemyScript = enemy.GetComponent<Pawn>(); 
+            enemyScript.Start(); 
             enemyScript.SetCurrentTile(_map[x][z].GetComponent<Tile>());
             enemyScript.SetPortrait(portraits[0]); 
-            enemyScript.SetUI(_strengthUI, _speedUI, _defenseUI, _willUI, _fatigueUI, _hpUI, _name);
+            enemyScript.UpdateUI();
             enemyScript.SetAsEnemy(true);
         }
+    }
+
+    public void UpdatePortraitUI(int strength, int speed, int defense, int will, int fatigue, int hp, string name, Sprite portraitImage, Sprite classImage){
+        _strengthUI.GetComponent<TMPro.TextMeshProUGUI>().text = strength.ToString(); 
+        _speedUI.GetComponent<TMPro.TextMeshProUGUI>().text = speed.ToString(); 
+        _defenseUI.GetComponent<TMPro.TextMeshProUGUI>().text = defense.ToString(); 
+        _willUI.GetComponent<TMPro.TextMeshProUGUI>().text = will.ToString(); 
+        _fatigueUI.GetComponent<Slider>().value = fatigue; 
+        _hpUI.GetComponent<Slider>().value = hp; 
+        _nameUI.GetComponent<TMPro.TextMeshProUGUI>().text = name; 
+        _portraitImage.GetComponent<Image>().overrideSprite = portraitImage; 
+        _classImage.GetComponent<Image>().overrideSprite = classImage; 
     }
 
     private void InstantiateCamera(){
@@ -112,39 +129,6 @@ public class GameManager : MonoBehaviour
         return neighbors; 
     }
 
-    
-
-    private List<Tile> Dijkstra(Tile start, int movement){
-        PriorityQueue<Tile> _priorityQueue = new PriorityQueue<Tile>(); 
-        Dictionary<Tile, int> _costToReachTile = new Dictionary<Tile, int>(); 
-        Dictionary<Tile, Tile> nextTileToGoal = new Dictionary<Tile, Tile>();  
-
-        //Our starting point costs nothing
-        var startNeighbors = FindNeighbors(start); 
-        if(startNeighbors.Count < 0){
-            return null; 
-        }
-        _priorityQueue.Enqueue(start, 0); 
-        _costToReachTile[start] = 0; 
-
-        while(_priorityQueue.Count > 0){
-            Tile currentTile = _priorityQueue.Dequeue(); 
-
-            foreach(Tile neighbor in FindNeighbors(currentTile)){
-                 
-                int newCost = _costToReachTile[currentTile] + neighbor.GetCost(); 
-                if((_costToReachTile.ContainsKey(neighbor) == false || newCost < _costToReachTile[neighbor] || currentTile == start) && newCost <= movement){
-                    _costToReachTile[neighbor] = newCost; 
-                    int priority = newCost; 
-                    _priorityQueue.Enqueue(neighbor, priority); 
-                    nextTileToGoal[neighbor] = currentTile; 
-                }
-            }
-        }
-
-        return new List<Tile>(nextTileToGoal.Keys); 
-    }
-
     public void HighlightAvailableTiles(List<Tile> tiles){ 
         foreach(Tile tile in tiles){
             tile.ChangeTilesMat(_availableMat, 0); 
@@ -162,7 +146,7 @@ public class GameManager : MonoBehaviour
     public void ShowAvailableMovement(GameObject pawn){
         _selectedPawn = pawn; 
         int movement = pawn.GetComponent<Pawn>().GetMovement(); 
-        _availableTiles = Dijkstra(pawn.GetComponent<Pawn>().GetTile(), movement); 
+        _availableTiles = PathFinding.Dijkstra(pawn.GetComponent<Pawn>().GetTile(), movement, FindNeighbors); 
         HighlightAvailableTiles(_availableTiles); 
     }
 

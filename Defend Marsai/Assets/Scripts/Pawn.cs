@@ -20,13 +20,14 @@ public class Pawn : MonoBehaviour
     private Color _oldMatColor; 
     private bool isSelected; 
     private Renderer _renderer; 
-    private GameObject _gameManager; 
+    private GameManager _gameManager; 
     private bool _isEnemy = false; 
 
     //UI
     [SerializeField] private GameObject _portrait;
+    [SerializeField] private Sprite _portraitImage;
+    [SerializeField] private Sprite _classImage;
         
-
     //position
     [SerializeField] private Tile _currentTile;
     private GameObject _targetTile;  
@@ -36,20 +37,14 @@ public class Pawn : MonoBehaviour
     private float _step; 
     private bool _move; 
 
-    void Start(){
+    public void Start(){
         _renderer = gameObject.GetComponent<Renderer>(); 
-        _gameManager = GameObject.Find("GameManager"); 
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
         _controller = gameObject.GetComponent<CharacterController>(); 
     }
 
-    public void SetUI(GameObject strength, GameObject speed, GameObject defense, GameObject will, GameObject fatigue, GameObject hp, GameObject name){
-        strength.GetComponent<TMPro.TextMeshProUGUI>().text = _strength.ToString(); 
-        speed.GetComponent<TMPro.TextMeshProUGUI>().text = _speed.ToString(); 
-        defense.GetComponent<TMPro.TextMeshProUGUI>().text = _defense.ToString(); 
-        will.GetComponent<TMPro.TextMeshProUGUI>().text = _will.ToString(); 
-        fatigue.GetComponent<Slider>().value = _fatigue; 
-        hp.GetComponent<Slider>().value = _hp; 
-        name.GetComponent<TMPro.TextMeshProUGUI>().text = _name; 
+    public void UpdateUI(){
+        _gameManager.UpdatePortraitUI(_strength, _speed, _defense, _will, _fatigue, _hp, _name, _portraitImage, _classImage); 
     }
 
     public void SetAsEnemy(bool isEnemy){
@@ -83,13 +78,14 @@ public class Pawn : MonoBehaviour
         isSelected = false; 
         Unhighlight(); 
         HidePortrait(); 
-        _gameManager.GetComponent<GameManager>().DeselectedPawn(); 
+        _gameManager.DeselectedPawn(); 
     }
 
     private void Select(){
         isSelected = true; 
         Highlight(isSelected);
         ShowAvailableMovement(); 
+        UpdateUI(); 
         ShowPortrait(); 
     }
 
@@ -114,7 +110,7 @@ public class Pawn : MonoBehaviour
         var tile = GetTile(); 
         var xcoord = tile.GetXCoord(); 
         var zcoord = tile.GetZCoord(); 
-        _gameManager.GetComponent<GameManager>().ShowAvailableMovement(gameObject); 
+        _gameManager.ShowAvailableMovement(gameObject); 
     }
 
     public int GetMovement(){

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1247634300715477789}
   - component: {fileID: 5795226570301661762}
   - component: {fileID: 7573066419040142389}
+  - component: {fileID: 706491472476613741}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -20,21 +21,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2224211665406099072
-Transform:
+--- !u!224 &2224211665406099072
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3170752887869082363}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2060862, y: -3.069113, z: 7.2390156}
+  m_LocalPosition: {x: 0, y: 0, z: 7.2390156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 1.2060862, y: -3.069113}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &527486942654856279
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -127,4 +132,14 @@ MonoBehaviour:
   _fatigue: 0
   _hp: 100
   _portrait: {fileID: 0}
+  _portraitImage: {fileID: 21300000, guid: dc2dd603999ec4f399522656bf0e2bc6, type: 3}
+  _classImage: {fileID: 21300000, guid: 9eca51f7a43154fc3b1ef16616916a17, type: 3}
   _currentTile: {fileID: 0}
+--- !u!222 &706491472476613741
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3170752887869082363}
+  m_CullTransparentMesh: 1

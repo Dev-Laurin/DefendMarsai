@@ -3,23 +3,48 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using System; 
 
 public class PriorityQueueTests
 {
     // A Test behaves as an ordinary method
     [Test]
-    public void PriorityQueueTestsSimplePasses()
+    public void LowestPriorityAtTop()
     {
-        // Use the Assert class to test conditions
+        PriorityQueue<string> pq = new PriorityQueue<string>(); 
+        pq.Enqueue("mid", 5); 
+        pq.Enqueue("low", -1); 
+        pq.Enqueue("high", 10); 
+
+        string lowest = pq.Dequeue(); 
+        Assert.AreEqual(lowest, "low"); 
     }
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator PriorityQueueTestsWithEnumeratorPasses()
+    [Test]
+    public void Enqueue()
     {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
-        yield return null;
+        PriorityQueue<string> pq = new PriorityQueue<string>(); 
+        pq.Enqueue("mid", 5); 
+
+        string elem = pq.Dequeue(); 
+        Assert.AreEqual(elem, "mid");
+    }
+
+    [Test]
+    public void Dequeue()
+    {
+        PriorityQueue<string> pq = new PriorityQueue<string>(); 
+        pq.Enqueue("mid", 5); 
+        pq.Enqueue("low", -1); 
+        pq.Enqueue("high", 10); 
+
+        string lowest = pq.Dequeue(); 
+        string mid = pq.Dequeue(); 
+        string high = pq.Dequeue(); 
+        Assert.AreEqual(lowest, "low"); 
+        Assert.AreEqual(mid, "mid"); 
+        Assert.AreEqual(high, "high"); 
+
+        Assert.Throws<Exception>(() => pq.Dequeue()); 
     }
 }
