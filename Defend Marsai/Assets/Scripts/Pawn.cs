@@ -63,13 +63,13 @@ public class Pawn : MonoBehaviour
     }
 
     void OnMouseEnter(){
-        if(!isSelected){
+        if(!isSelected && _gameManager.isPlayerTurn()){
             Highlight(); 
         }
     }
     
     void OnMouseExit(){
-        if(!isSelected){
+        if(!isSelected && _gameManager.isPlayerTurn()){
             Unhighlight(); 
         }
     }
@@ -90,11 +90,13 @@ public class Pawn : MonoBehaviour
     }
 
     void OnMouseDown(){
-        if(isSelected){
-            Deselect(); 
-        }
-        else{
-            Select(); 
+        if(_gameManager.isPlayerTurn()){
+            if(isSelected){
+                Deselect(); 
+            }
+            else{
+                Select(); 
+            }
         }
     }
 
@@ -138,6 +140,10 @@ public class Pawn : MonoBehaviour
 
     public void SetPortrait(GameObject portrait){
         _portrait = portrait; 
+    }
+
+    public bool isEnemy(){
+        return _isEnemy; 
     }
 
     void Update(){

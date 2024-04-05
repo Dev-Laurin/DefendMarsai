@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System; 
 using UnityEngine.UI;
+using TMPro; 
+
+enum State{
+        PLAYER_TURN = 1, 
+        ENEMY_TURN = 2, 
+        OTHER_TURN = 3, 
+        DIALOGUE = 4 
+    }; 
 
 public class GameManager : MonoBehaviour
 {
@@ -30,16 +38,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _nameUI; 
     [SerializeField] private GameObject _portraitImage;
     [SerializeField] private GameObject _classImage;
+    [SerializeField] private GameObject _turnTextUI; 
+
+    //Vars
+    private TextMeshProUGUI _turnText; 
+
+    //State
+    private State _state; 
+
+    //Pawns
+    private List<GameObject> _playerPawns = new List<GameObject>(); 
+    private List<GameObject> _enemyPawns = new List<GameObject>(); 
 
     // Start is called before the first frame update
     void Start()
     {
         _width = 10; 
         _height = _width; 
+        _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>(); 
         GenerateMap(); 
         InstantiateCamera(); 
         InstantiatePawns(); 
         InstantiateEnemies(); 
+        PlayerTurn();   
+        
     }
 
     private void InstantiatePawns(){
@@ -49,6 +71,7 @@ public class GameManager : MonoBehaviour
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
         pawnScript.SetPortrait(portraits[0]); 
         pawnScript.UpdateUI(); 
+        _playerPawns.Add(pawn); 
     }
 
     private void InstantiateEnemies(){
@@ -62,6 +85,7 @@ public class GameManager : MonoBehaviour
             enemyScript.SetPortrait(portraits[0]); 
             enemyScript.UpdateUI();
             enemyScript.SetAsEnemy(true);
+            _enemyPawns.Add(enemy); 
         }
     }
 
@@ -100,9 +124,38 @@ public class GameManager : MonoBehaviour
         //see if a pawn is selected 
         if(_selectedPawn){
             //if tile is selectable when a pawn is selected, move the pawn there
+            var isEnemy = _selectedPawn.GetComponent<Pawn>().isEnemy(); 
             _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
             DeHighlightTiles(); 
+            if(!isEnemy){
+                StartCoroutine(EnemyTurn()); 
+            }
         }
+    }
+
+    public bool isPlayerTurn(){
+        return _state == State.PLAYER_TURN; 
+    }
+
+    private IEnumerator AttackPlayer(){
+        Debug.Log("Enemy Turn"); 
+        yield return new WaitForSeconds(2); 
+        Debug.Log("Enemy Finished"); 
+    }
+    
+    private IEnumerator EnemyTurn(){
+        _state = State.ENEMY_TURN; 
+        _turnText.text = "Enemy Turn";  
+        //move towards player pawns TODO advanced pathfinding here / search
+        yield return StartCoroutine(AttackPlayer());  
+        yield return new WaitForSeconds(1); 
+        PlayerTurn(); 
+    }
+
+    private void PlayerTurn(){
+        _state = State.PLAYER_TURN;
+        _turnText.text = "Player Turn";  
+        Debug.Log("Player Turn"); 
     }
 
     private List<Tile> FindNeighbors(Tile tile){
