@@ -79,7 +79,7 @@ public class Tile : MonoBehaviour
     void OnMouseDown(){
         if(_selectable){
             RevertToOriginalTilesMat();
-            _gameManager.GetComponent<GameManager>().TileSelected(gameObject); 
+            _gameManager.GetComponent<GameManager>().GetBattleSystem().TileSelected(gameObject); 
         } 
     }
 
