@@ -124,14 +124,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: Henry
-  _movement: 2
+  _movement: 3
   _strength: 10
   _speed: 6
-  _defense: 9
+  _defense: 0
   _will: 6
   _fatigue: 0
-  _hp: 100
-  _attackSpaces: 1
+  _maxFatigue: 3
+  _hp: 30
+  _range: 1
+  _maxHP: 30
   _portrait: {fileID: 0}
   _portraitImage: {fileID: 21300000, guid: dc2dd603999ec4f399522656bf0e2bc6, type: 3}
   _classImage: {fileID: 21300000, guid: 9eca51f7a43154fc3b1ef16616916a17, type: 3}

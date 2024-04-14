@@ -14,8 +14,10 @@ public class Pawn : MonoBehaviour
     [SerializeField] private int _defense; 
     [SerializeField] private int _will; 
     [SerializeField] private int _fatigue; 
+    [SerializeField] private int _maxFatigue; 
     [SerializeField] private int _hp; 
     [SerializeField] private int _range; 
+    [SerializeField] private int _maxHP; 
 
     //selection
     private Color _oldMatColor; 
@@ -67,10 +69,6 @@ public class Pawn : MonoBehaviour
         _renderer.material.color = _oldMatColor; 
     }
 
-    private void isSelectable(){
-
-    }
-
     public int CalculateTargetPriority(Pawn pawn){
         //TODO
         return 1;  
@@ -89,8 +87,10 @@ public class Pawn : MonoBehaviour
     }
 
     public bool UnitInRange(Pawn unit){
+        Debug.Log($"Unit to reach Tile: {unit.GetTile()}"); 
         var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
-        return path != null; 
+        Print.Path(path); 
+        return path.Count <= _range; 
     }
 
     public IEnumerator MoveToTileViaPath(Queue<Tile> path){
@@ -100,19 +100,29 @@ public class Pawn : MonoBehaviour
         }
     }
 
-    private void Deselect(){
+    public void Deselect(){
         isSelected = false; 
         Unhighlight(); 
         HidePortrait(); 
         _battleSystem.DeselectedPawn(); 
     }
 
-    private void Select(){
-        isSelected = true; 
-        Highlight(isSelected);
-        ShowAvailableMovement(); 
-        UpdateUI(); 
-        ShowPortrait(); 
+    public void Select(){
+        Debug.Log($"Selected {gameObject}"); 
+        _battleSystem.PawnSelected(gameObject); 
+        if(_isEnemy && _battleSystem.AwaitingPlayerOption()){
+            isSelected = true; 
+            Highlight(isSelected);
+            _battleSystem.UnitSelected(gameObject); 
+        }
+        else{
+            isSelected = true; 
+            Highlight(isSelected);
+            ShowAvailableMovement(); 
+            UpdateUI(); 
+            ShowPortrait(); 
+        }
+        
     }
 
     void OnMouseDown(){
@@ -127,11 +137,11 @@ public class Pawn : MonoBehaviour
     }
 
     void ShowPortrait(){
-        _portrait.SetActive(true); 
+        _uiManager.ShowPortrait(true); 
     }
 
     void HidePortrait(){
-        _portrait.SetActive(false); 
+        _uiManager.ShowPortrait(false); 
     }
 
     void ShowAvailableMovement(){
@@ -146,12 +156,17 @@ public class Pawn : MonoBehaviour
     }
 
     public void MoveToTile(GameObject tile){
+        _move = true; 
         tile.GetComponent<Tile>().RevertToOriginalTilesMat(); 
         _targetTile = tile;
-        _move = true; 
         _currentTile.RevertToOriginalTilesMat(); 
         _currentTile = _targetTile.GetComponent<Tile>();
-        Deselect();
+
+        bool moreActions = _battleSystem.HighlightInteractableUnits(gameObject); 
+        if(!moreActions){
+            Deselect();
+            _battleSystem.PlayerFinishedUnit(gameObject);  
+        }
     }
 
     public int GetStrength(){
@@ -182,6 +197,18 @@ public class Pawn : MonoBehaviour
         return _name; 
     }
 
+    public int GetRange(){
+        return _range; 
+    }
+
+    public int GetMaxHP(){
+        return _maxHP; 
+    }
+
+    public int GetMaxFatigue(){
+        return _maxFatigue; 
+    }
+
     public Sprite GetPortrait(){
         return _portraitImage; 
     }
@@ -194,7 +221,7 @@ public class Pawn : MonoBehaviour
         return _currentTile; 
     }
 
-    public void TakeDamage(int damage){
+    public int TakeDamage(int damage){
         int damageTaken = damage - _defense;
         if(damageTaken < 0){
             damageTaken = 0; //we defended
@@ -205,6 +232,14 @@ public class Pawn : MonoBehaviour
             _hp = 0; 
             _battleSystem.RemoveUnit(gameObject); 
         }
+
+        IncreaseFatigue(1); 
+
+        return damageTaken; 
+    }
+
+    public void IncreaseFatigue(int num){
+        _fatigue += num; 
     }
 
     public int LookupDamage(Pawn unit){

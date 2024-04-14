@@ -52,6 +52,7 @@ public static class PathFinding
             foreach(Tile neighbor in FindNeighbors(currentTile)){
                  
                 int newCost = _costToReachTile[currentTile] + neighbor.GetCost(); 
+
                 if(_costToReachTile.ContainsKey(neighbor) == false || newCost < _costToReachTile[neighbor]){
                     _costToReachTile[neighbor] = newCost; 
                     int priority = newCost; 
@@ -67,6 +68,7 @@ public static class PathFinding
 
         Queue<Tile> path = new Queue<Tile>(); 
         Tile curPathTile = start; 
+
         while(curPathTile != goal){
             curPathTile = nextTileToGoal[curPathTile]; 
             path.Enqueue(curPathTile); 

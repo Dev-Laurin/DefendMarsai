@@ -26,4 +26,13 @@ public class GameManager : MonoBehaviour
     public BattleSystem GetBattleSystem(){
         return _battleSystem; 
     }
+
+    public void AttackButtonPressed(){
+        Debug.Log("Attack button pressed, gamemanager"); 
+        StartCoroutine(_battleSystem.AttackButtonPressed()); 
+    }
+
+    public void EndUnitTurnButtonPressed(){
+        _battleSystem.EndUnitTurnButtonPressed(); 
+    }
 }

@@ -27,15 +27,24 @@ public class BattleSystem : MonoBehaviour
     private List<GameObject> _playerPawns = new List<GameObject>(); 
     private List<GameObject> _enemyPawns = new List<GameObject>(); 
     private GameObject _selectedPawn;
+    private GameObject _selectedPawn2; 
     private List<Tile> _availableTiles;
 
     //state
     private State _state; 
+    private bool _playerChoosingOptions = false; 
 
     //enemy
     [SerializeField] private int _enemyCount = 1;
 
+    //systems
+    private GameManager _gameManager; 
+    private UIManager _uiManager; 
+
+
     public void StartBattle(){
+        _gameManager = gameObject.GetComponent<GameManager>(); 
+        _uiManager = _gameManager.GetUIManager(); 
         GenerateMap(); 
         InstantiateCamera(); 
         InstantiatePawns(); 
@@ -88,6 +97,10 @@ public class BattleSystem : MonoBehaviour
         return _state; 
     }
 
+    public bool AwaitingPlayerOption(){
+        return _playerChoosingOptions; 
+    }
+
     public bool isPlayerTurn(){
         return isSelectable(); 
     }
@@ -120,6 +133,13 @@ public class BattleSystem : MonoBehaviour
         return neighbors; 
     }
 
+    //Player has selected a unit to perform an action on
+    public void UnitSelected(GameObject pawn){
+        Debug.Log($"Selected {pawn} (battlesystem)"); 
+        _selectedPawn2 = pawn; 
+        _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
+    }
+
     public void DisplayOptions(Pawn pawn, List<Pawn> interactablePawns){
         var _uiManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetUIManager();
         _uiManager.UpdateOptionsMenu(pawn, interactablePawns[0]); 
@@ -129,25 +149,51 @@ public class BattleSystem : MonoBehaviour
         return _state == State.PLAYER_TURN; 
     }
 
-    private List<Pawn> findInteractableUnits(GameObject selectedPawn){
-        List<Pawn> unitsInRange = new List<Pawn>(); 
+    public bool HighlightInteractableUnits(GameObject pawn){
+        Debug.Log("Highlighting interactable units"); 
+        List<GameObject> units = findInteractableUnits(pawn); 
+        bool moreActions = units.Count > 0; 
+        if(moreActions){
+            Debug.Log($"Auto-selecting {units[0]}"); 
+            units[0].GetComponent<Pawn>().Select(); 
+        }
+        
+        return moreActions; 
+    }
+
+    private List<GameObject> findInteractableUnits(GameObject selectedPawn){
+        List<GameObject> unitsInRange = new List<GameObject>(); 
 
         List<GameObject> allPawns = _playerPawns; 
+
         allPawns.AddRange(_enemyPawns);  
 
         foreach(GameObject pawn in allPawns){
-            if(selectedPawn.GetComponent<Pawn>().UnitInRange(pawn.GetComponent<Pawn>())){
-                unitsInRange.Add(pawn.GetComponent<Pawn>()); 
+            if(pawn != selectedPawn && selectedPawn.GetComponent<Pawn>().UnitInRange(pawn.GetComponent<Pawn>())){
+                unitsInRange.Add(pawn); 
             }
         }
-
+ 
         return unitsInRange; 
     }
 
+    private void ResetVars(){
+        if(_selectedPawn){
+             _selectedPawn.GetComponent<Pawn>().Deselect(); 
+             _selectedPawn = null; 
+        }
+
+        if(_selectedPawn2){
+            _selectedPawn2.GetComponent<Pawn>().Deselect(); 
+            _selectedPawn2 = null; 
+        }
+    }
+
     private IEnumerator EnemyTurn(){
+        ResetVars(); 
         _state = State.ENEMY_TURN; 
-        var _uiManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetUIManager();
         _uiManager.UpdateTurnText("Enemy Turn");  
+        yield return new WaitForSeconds(1); 
         //move towards player pawns TODO advanced pathfinding here / search
         foreach(GameObject pawn in _enemyPawns){
             yield return GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(AttackPlayer(pawn.GetComponent<Pawn>()));  
@@ -173,29 +219,39 @@ public class BattleSystem : MonoBehaviour
         }
         
         Pawn pawnToAttack = targets.Dequeue().GetComponent<Pawn>();
-        Queue<Tile> path = PathFinding.DijkstraWithGoal(pawn.GetComponent<Pawn>().GetTile(), pawnToAttack.GetTile(), pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors);
+        Tile pawnToAttackTile = pawnToAttack.GetTile(); 
+        Queue<Tile> path = PathFinding.DijkstraWithGoal(pawn.GetComponent<Pawn>().GetTile(), pawnToAttackTile, pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors);
+        Print.Path(path); 
 
-        //Find a tile we can move to within the path 
-        List<Tile> availableTiles = PathFinding.DijkstraAvailablePaths(pawn.GetComponent<Pawn>().GetTile(), pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors); 
-        
         int availableMovement = pawn.GetMovement(); 
-        while(availableMovement > 0){
+        while(availableMovement > 0 && path.Count > 0){
             Tile tile = path.Dequeue(); 
             int cost = tile.GetCost(); 
 
-            if((availableMovement - cost) > 0){
+            if(tile == pawnToAttackTile){
+                break; //we don't need to go on the actual tile
+            }
+
+            if((availableMovement - cost) >= 0){
                 availableMovement -= cost; 
-                yield return GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(nameof(pawn.MoveToTile), TileToGameObject(tile)); 
-                yield return new WaitForSeconds(1); 
+                pawn.MoveToTile(TileToGameObject(tile)); 
+            }
+            else{
+                break; 
             }
         }
 
-        if(path.Count <= 0){
+        yield return new WaitForSeconds(1); 
+
+        if(path.Count <= pawn.GetRange()){
+            Debug.Log("Attack the player"); 
             //we can attack the unit
             if(pawnToAttack){
-                pawnToAttack.TakeDamage(pawn.GetStrength()); 
+                Debug.Log($"Dealt {pawnToAttack.TakeDamage(pawn.GetStrength())} Damage"); 
             }
         }
+
+        pawn.IncreaseFatigue(1); 
         Debug.Log("Enemy Finished"); 
     }
 
@@ -235,6 +291,16 @@ public class BattleSystem : MonoBehaviour
         _selectedPawn = null; 
     }
 
+    public void PawnSelected(GameObject pawn){
+        if(isPlayerTurn()){
+            List<GameObject> interactableUnits = findInteractableUnits(pawn);
+            if(interactableUnits.Count > 0){
+                //player can select a pawn for their turn without moving
+                _playerChoosingOptions = true; 
+            }
+        }
+    }
+
     public void TileSelected(GameObject tile){
         //see if a pawn is selected 
         if(_selectedPawn){
@@ -243,17 +309,37 @@ public class BattleSystem : MonoBehaviour
             GameObject pawn = _selectedPawn; 
             _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
             DeHighlightTiles(); 
-            List<Pawn> interactableUnits = findInteractableUnits(pawn);
+            List<GameObject> interactableUnits = findInteractableUnits(pawn);
             Debug.Log($"Num of interactable units {interactableUnits.Count}"); 
             if(interactableUnits.Count > 0){
-                var _uiManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetUIManager();
-                _uiManager.UpdateOptionsMenu(pawn.GetComponent<Pawn>(), interactableUnits[0]); 
+                _playerChoosingOptions = true; 
+                _uiManager.UpdateOptionsMenu(pawn.GetComponent<Pawn>(), interactableUnits[0].GetComponent<Pawn>()); 
             }
             
-            if(!isEnemy){
-                GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(EnemyTurn()); 
+            if(!isEnemy && !_playerChoosingOptions){
+                StartCoroutine(EnemyTurn()); 
             }
         }
+    }
+
+    public IEnumerator AttackButtonPressed(){
+        Debug.Log("Attack Button pressed."); 
+        Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
+        otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
+        _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
+        yield return new WaitForSeconds(2); 
+        _uiManager.DisplayOptions(false); 
+        StartCoroutine(EnemyTurn());
+    }
+
+    public void EndUnitTurnButtonPressed(){
+        Debug.Log("End Unit Turn button pressed."); 
+        _uiManager.DisplayOptions(false); 
+        StartCoroutine(EnemyTurn());
+    }
+
+    public void PlayerFinishedUnit(GameObject pawn){
+        StartCoroutine(EnemyTurn());
     }
 
 }
