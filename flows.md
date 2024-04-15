@@ -19,8 +19,22 @@ flowchart LR;
   hasMovement --> yesEnough([yes])
   hasMovement --> noNotEnough([no])
   yesEnough --> move([Move])
+  move --> canInteract 
 
   noNotEnough --> cannotMove([Cannot Move])
-  cannotMove --> canInteract([Can interact])
+  cannotMove --> canInteract([Has weapon/tool with durability?])
+  canInteract --> yesInteract([yes])
+  canInteract --> noInteract([no])
+  yesInteract --> unitInRange([Is a unit within tool range?])
+  unitInRange --> yesInRange([yes])
+  unitInRange --> noInRange([no])
+  yesInRange --> interact([Interact])
+  interact --> endTurn
+
+  noInteract --> noUseTool([Cannot use tool])
+  noInRange --> noUseTool
+  noUseTool --> endTurn
+
+  endTurn([End Unit Turn])
   
 ```
