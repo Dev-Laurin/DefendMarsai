@@ -35,4 +35,15 @@ public class GameManager : MonoBehaviour
     public void EndUnitTurnButtonPressed(){
         _battleSystem.EndUnitTurnButtonPressed(); 
     }
+
+    public void ResetMatchButtonPressed(){
+        Debug.Log("Re-match!"); 
+        _uiManager.StartBattleUI(); 
+        _battleSystem.StartBattle(); 
+    }
+
+    public void QuitButtonPressed(){
+        Debug.Log("Thanks for playing, Good bye."); 
+        Application.Quit(); 
+    }
 }

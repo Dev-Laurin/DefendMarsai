@@ -12,7 +12,8 @@ enum TileType{
 public class Tile : MonoBehaviour
 {
     private Color _oldMatColor; 
-    private GameObject _gameManager; 
+    private GameManager _gameManager; 
+    private BattleSystem _battleSystem; 
     public TextMesh _text; 
     [SerializeField] private Material _oldMat; 
     [SerializeField] private int _oldMatIndex;
@@ -24,7 +25,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material _highlightMat; 
 
     void Start(){
-        _gameManager = GameObject.Find("GameManager"); 
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
+        _battleSystem = _gameManager.GetBattleSystem(); 
         _oldMatIndex = 0; 
         _oldMat = gameObject.GetComponent<Renderer>().materials[0];
         _originalMat = gameObject.GetComponent<Renderer>().materials[0];
@@ -77,9 +79,10 @@ public class Tile : MonoBehaviour
     }
 
     void OnMouseDown(){
-        if(_selectable){
+        Debug.Log($"Selectable {_selectable} Is player turn {_battleSystem.isPlayerTurn()} awaiting player option {_battleSystem.AwaitingPlayerOption()}"); 
+        if(_selectable && _battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption()){
             RevertToOriginalTilesMat();
-            _gameManager.GetComponent<GameManager>().GetBattleSystem().TileSelected(gameObject); 
+            _battleSystem.TileSelected(gameObject); 
         } 
     }
 

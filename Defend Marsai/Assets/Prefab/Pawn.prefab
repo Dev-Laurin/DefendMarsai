@@ -135,7 +135,7 @@ MonoBehaviour:
   _range: 1
   _maxHP: 30
   _portrait: {fileID: 0}
-  _portraitImage: {fileID: 21300000, guid: dc2dd603999ec4f399522656bf0e2bc6, type: 3}
+  _portraitImage: {fileID: 21300000, guid: 7406aa06062e944a99cac22024af49f8, type: 3}
   _classImage: {fileID: 21300000, guid: 9eca51f7a43154fc3b1ef16616916a17, type: 3}
   _currentTile: {fileID: 0}
 --- !u!222 &706491472476613741

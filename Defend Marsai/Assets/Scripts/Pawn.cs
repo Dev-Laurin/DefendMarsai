@@ -108,9 +108,9 @@ public class Pawn : MonoBehaviour
     }
 
     public void Select(){
-        Debug.Log($"Selected {gameObject}"); 
-        _battleSystem.PawnSelected(gameObject); 
-        if(_isEnemy && _battleSystem.AwaitingPlayerOption()){
+        Debug.Log($"Selected {gameObject} and in range {_battleSystem.InRange(gameObject)}"); 
+
+        if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
             Highlight(isSelected);
             _battleSystem.UnitSelected(gameObject); 
@@ -126,7 +126,7 @@ public class Pawn : MonoBehaviour
     }
 
     void OnMouseDown(){
-        if(_battleSystem.isPlayerTurn()){
+        if(_battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption()){
             if(isSelected){
                 Deselect(); 
             }

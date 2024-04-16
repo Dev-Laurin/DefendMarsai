@@ -6,7 +6,9 @@ public enum State{
         PLAYER_TURN = 1, 
         ENEMY_TURN = 2, 
         OTHER_TURN = 3, 
-        DIALOGUE = 4 
+        DIALOGUE = 4,
+        WIN = 5,
+        LOSE = 6
     }; 
 
 public class BattleSystem : MonoBehaviour
@@ -187,6 +189,7 @@ public class BattleSystem : MonoBehaviour
             _selectedPawn2.GetComponent<Pawn>().Deselect(); 
             _selectedPawn2 = null; 
         }
+        _playerChoosingOptions = false; 
     }
 
     private IEnumerator EnemyTurn(){
@@ -196,7 +199,7 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1); 
         //move towards player pawns TODO advanced pathfinding here / search
         foreach(GameObject pawn in _enemyPawns){
-            yield return GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(AttackPlayer(pawn.GetComponent<Pawn>()));  
+            yield return StartCoroutine(AttackPlayer(pawn.GetComponent<Pawn>()));  
         }
         
         yield return new WaitForSeconds(1); 
@@ -204,8 +207,9 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void PlayerTurn(){
+        ResetVars(); 
         _state = State.PLAYER_TURN;
-        var _uiManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetUIManager();
+        var _uiManager = _gameManager.GetUIManager();
         _uiManager.UpdateTurnText("Player Turn");  
         Debug.Log("Player Turn"); 
     }
@@ -223,27 +227,30 @@ public class BattleSystem : MonoBehaviour
         Queue<Tile> path = PathFinding.DijkstraWithGoal(pawn.GetComponent<Pawn>().GetTile(), pawnToAttackTile, pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors);
         Print.Path(path); 
 
-        int availableMovement = pawn.GetMovement(); 
-        while(availableMovement > 0 && path.Count > 0){
-            Tile tile = path.Dequeue(); 
-            int cost = tile.GetCost(); 
+        int pathCount = 0; 
+        if(path != null){
+            pathCount = path.Count; 
+            int availableMovement = pawn.GetMovement(); 
+            while(availableMovement > 0 && path.Count > 0){
+                Tile tile = path.Dequeue(); 
+                int cost = tile.GetCost(); 
 
-            if(tile == pawnToAttackTile){
-                break; //we don't need to go on the actual tile
-            }
+                if(tile == pawnToAttackTile){
+                    break; //we don't need to go on the actual tile
+                }
 
-            if((availableMovement - cost) >= 0){
-                availableMovement -= cost; 
-                pawn.MoveToTile(TileToGameObject(tile)); 
+                if((availableMovement - cost) >= 0){
+                    availableMovement -= cost; 
+                    pawn.MoveToTile(TileToGameObject(tile)); 
+                }
+                else{
+                    break; 
+                }
             }
-            else{
-                break; 
-            }
+            yield return new WaitForSeconds(1); 
         }
 
-        yield return new WaitForSeconds(1); 
-
-        if(path.Count <= pawn.GetRange()){
+        if(pathCount <= pawn.GetRange()){
             Debug.Log("Attack the player"); 
             //we can attack the unit
             if(pawnToAttack){
@@ -255,14 +262,29 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Enemy Finished"); 
     }
 
+    private void CheckEndState(){
+        if(_playerPawns.Count <= 0){
+            _state = State.LOSE; 
+            _uiManager.ShowLoseUI(); 
+        }
+        else if(_enemyPawns.Count <= 0){
+            _state = State.WIN; 
+            _uiManager.ShowWinUI(); 
+        }
+    }
+
     public void RemoveUnit(GameObject pawn){
         Debug.Log($"Removing {pawn}"); 
-        if(pawn.GetComponent<Pawn>().isEnemy()){
+        Pawn unit = pawn.GetComponent<Pawn>(); 
+        if(unit.isEnemy()){
             _enemyPawns.Remove(pawn);
+            Destroy(pawn); 
         }
         else{
             _playerPawns.Remove(pawn); 
         }
+
+        CheckEndState(); 
     }
 
     public void HighlightAvailableTiles(List<Tile> tiles){ 
@@ -273,6 +295,7 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void DeHighlightTiles(){
+        Debug.Log("Dehighlighting tiles"); 
         foreach(Tile tile in _availableTiles){
             tile.RevertToOriginalTilesMat(); 
             tile.SetSelection(false); 
@@ -291,14 +314,11 @@ public class BattleSystem : MonoBehaviour
         _selectedPawn = null; 
     }
 
-    public void PawnSelected(GameObject pawn){
-        if(isPlayerTurn()){
-            List<GameObject> interactableUnits = findInteractableUnits(pawn);
-            if(interactableUnits.Count > 0){
-                //player can select a pawn for their turn without moving
-                _playerChoosingOptions = true; 
-            }
+    public bool InRange(GameObject pawn){
+        if(_selectedPawn && isPlayerTurn()){
+            return _selectedPawn.GetComponent<Pawn>().UnitInRange(pawn.GetComponent<Pawn>());
         }
+        return false; 
     }
 
     public void TileSelected(GameObject tile){
@@ -307,18 +327,32 @@ public class BattleSystem : MonoBehaviour
             //if tile is selectable when a pawn is selected, move the pawn there
             var isEnemy = _selectedPawn.GetComponent<Pawn>().isEnemy(); 
             GameObject pawn = _selectedPawn; 
-            _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
-            DeHighlightTiles(); 
-            List<GameObject> interactableUnits = findInteractableUnits(pawn);
-            Debug.Log($"Num of interactable units {interactableUnits.Count}"); 
-            if(interactableUnits.Count > 0){
-                _playerChoosingOptions = true; 
-                _uiManager.UpdateOptionsMenu(pawn.GetComponent<Pawn>(), interactableUnits[0].GetComponent<Pawn>()); 
+            if(!isEnemy){
+                _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
+                List<GameObject> interactableUnits = findInteractableUnits(pawn);
+                Debug.Log($"Num of interactable units {interactableUnits.Count}"); 
+                if(interactableUnits.Count > 0){
+                    _playerChoosingOptions = true; 
+                    _uiManager.UpdateOptionsMenu(pawn.GetComponent<Pawn>(), interactableUnits[0].GetComponent<Pawn>()); 
+                }
             }
             
-            if(!isEnemy && !_playerChoosingOptions){
-                StartCoroutine(EnemyTurn()); 
+            DeHighlightTiles(); 
+
+            if(isEnemy){
+                _selectedPawn.GetComponent<Pawn>().Deselect(); 
             }
+            
+            
+            if(!isEnemy && !_playerChoosingOptions){
+                EndPlayerTurn(); 
+            }
+        }
+    }
+    
+    private void EndPlayerTurn(){
+        if(isPlayerTurn()){
+            StartCoroutine(EnemyTurn());
         }
     }
 
@@ -329,17 +363,17 @@ public class BattleSystem : MonoBehaviour
         _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
         yield return new WaitForSeconds(2); 
         _uiManager.DisplayOptions(false); 
-        StartCoroutine(EnemyTurn());
+        EndPlayerTurn(); 
     }
 
     public void EndUnitTurnButtonPressed(){
         Debug.Log("End Unit Turn button pressed."); 
         _uiManager.DisplayOptions(false); 
-        StartCoroutine(EnemyTurn());
+        EndPlayerTurn(); 
     }
 
     public void PlayerFinishedUnit(GameObject pawn){
-        StartCoroutine(EnemyTurn());
+        EndPlayerTurn(); 
     }
 
 }

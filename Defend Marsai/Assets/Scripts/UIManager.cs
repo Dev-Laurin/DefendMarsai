@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    //UI
+    //Battle UI
     [SerializeField] private GameObject _strengthUI; 
     [SerializeField] private GameObject _speedUI;
     [SerializeField] private GameObject _defenseUI;
@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _turnTextUI; 
     [SerializeField] private GameObject _options; 
 
-    //Options UI
+    //Battle Options UI
     //unit 1 
     [SerializeField] private GameObject _unit1Image; 
     [SerializeField] private GameObject _unit1HPSliderUI;
@@ -38,6 +38,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _unit2SpeedUI; 
     [SerializeField] private GameObject _unit2WillUI; 
     [SerializeField] private GameObject _unit2ClassUI; 
+
+    //UI
+    [SerializeField] private GameObject _menuPanel; 
 
     //vars 
     private TMPro.TextMeshProUGUI _turnText; 
@@ -99,6 +102,7 @@ public class UIManager : MonoBehaviour
 
     public void StartBattleUI(){
         _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>();
+        ShowEndBattleMenu(false); 
     }
 
     public void DisplayOptions(bool show){
@@ -111,5 +115,19 @@ public class UIManager : MonoBehaviour
 
     public void ShowPortrait(bool show){
         _portraitPanel.SetActive(show); 
+    }
+
+    public void ShowLoseUI(){
+        UpdateTurnText("You Lost."); 
+        ShowEndBattleMenu(true); 
+    }
+
+    public void ShowWinUI(){
+        UpdateTurnText("You Won!");
+        ShowEndBattleMenu(true); 
+    }
+
+    public void ShowEndBattleMenu(bool show){
+        _menuPanel.SetActive(show); 
     }
 }
