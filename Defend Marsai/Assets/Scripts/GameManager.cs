@@ -5,6 +5,12 @@ using System;
 using UnityEngine.UI;
 using TMPro; 
 
+public enum GameState{
+    PAUSE = 1,
+    MAIN_MENU = 2, 
+    BATTLE = 3
+}
+
 public class GameManager : MonoBehaviour
 {    
 

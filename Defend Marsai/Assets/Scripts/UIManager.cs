@@ -55,13 +55,13 @@ public class UIManager : MonoBehaviour
         _hpUI.GetComponent<Slider>().value = pawn.GetHP(); 
         _hpUI.GetComponent<Slider>().maxValue = pawn.GetMaxHP(); 
         _nameUI.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetName(); 
+        _portraitImage.GetComponent<UISpriteAnimation>().StopAnimation(); 
         _portraitImage.GetComponent<Image>().overrideSprite = pawn.GetPortrait(); 
+        _portraitImage.GetComponent<UISpriteAnimation>().StartAnimation(); 
         _classImage.GetComponent<Image>().overrideSprite = pawn.GetClassImage(); 
     }
 
     public void UpdateOptionsMenu(Pawn pawn, Pawn otherPawn){
-        Debug.Log("updating options menu"); 
-
         _unit1HPSliderUI.GetComponent<Slider>().value = pawn.GetHP();
         _unit1HPSliderUI.GetComponent<Slider>().maxValue = pawn.GetMaxHP();
         _unit1FatigueSliderUI.GetComponent<Slider>().value = pawn.GetFatigue();

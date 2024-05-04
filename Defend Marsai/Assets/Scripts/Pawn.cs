@@ -32,6 +32,7 @@ public class Pawn : MonoBehaviour
     [SerializeField] private GameObject _portrait;
     [SerializeField] private Sprite _portraitImage;
     [SerializeField] private Sprite _classImage;
+    [SerializeField] private RuntimeAnimatorController _portraitAnimator; 
         
     //position
     [SerializeField] private Tile _currentTile;
@@ -119,8 +120,8 @@ public class Pawn : MonoBehaviour
             isSelected = true; 
             Highlight(isSelected);
             ShowAvailableMovement(); 
+            ShowPortrait();
             UpdateUI(); 
-            ShowPortrait(); 
         }
         
     }
@@ -211,6 +212,10 @@ public class Pawn : MonoBehaviour
 
     public Sprite GetPortrait(){
         return _portraitImage; 
+    }
+
+    public RuntimeAnimatorController GetPortraitAnimator(){
+        return _portraitAnimator; 
     }
 
     public Sprite GetClassImage(){

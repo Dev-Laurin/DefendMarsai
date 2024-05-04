@@ -135,8 +135,9 @@ MonoBehaviour:
   _range: 1
   _maxHP: 30
   _portrait: {fileID: 0}
-  _portraitImage: {fileID: 21300000, guid: 7406aa06062e944a99cac22024af49f8, type: 3}
+  _portraitImage: {fileID: 778331286, guid: f6e41b24f0c8a407dbdf3dcd7b970ea1, type: 3}
   _classImage: {fileID: 21300000, guid: 9eca51f7a43154fc3b1ef16616916a17, type: 3}
+  _portraitAnimator: {fileID: 9100000, guid: 1a2ed56f03b8445568d81b50633da6a7, type: 2}
   _currentTile: {fileID: 0}
 --- !u!222 &706491472476613741
 CanvasRenderer:
