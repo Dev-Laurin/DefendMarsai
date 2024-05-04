@@ -225,7 +225,6 @@ public class BattleSystem : MonoBehaviour
         Pawn pawnToAttack = targets.Dequeue().GetComponent<Pawn>();
         Tile pawnToAttackTile = pawnToAttack.GetTile(); 
         Queue<Tile> path = PathFinding.DijkstraWithGoal(pawn.GetComponent<Pawn>().GetTile(), pawnToAttackTile, pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors);
-        Print.Path(path); 
 
         int pathCount = 0; 
         if(path != null){

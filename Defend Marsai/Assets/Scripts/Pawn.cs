@@ -49,6 +49,7 @@ public class Pawn : MonoBehaviour
         _controller = gameObject.GetComponent<CharacterController>(); 
         _uiManager = _gameManager.GetUIManager(); 
         _battleSystem = _gameManager.GetBattleSystem(); 
+        _oldMatColor = _renderer.material.color;
     }
 
     public void UpdateUI(){
@@ -59,14 +60,15 @@ public class Pawn : MonoBehaviour
         _isEnemy = isEnemy; 
     }
 
-    void Highlight(bool selecting = false){
+    private void Highlight(bool selecting = false){
         if(!selecting){
             _oldMatColor = _renderer.material.color;
         }
         _renderer.material.color = new Color(1, 0.54f, 0, 1);         
     }
 
-    void Unhighlight(){
+    private void Unhighlight(){
+        Debug.Log($"Dehighlighting color: {_oldMatColor}"); 
         _renderer.material.color = _oldMatColor; 
     }
 
@@ -90,7 +92,6 @@ public class Pawn : MonoBehaviour
     public bool UnitInRange(Pawn unit){
         Debug.Log($"Unit to reach Tile: {unit.GetTile()}"); 
         var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
-        Print.Path(path); 
         return path.Count <= _range; 
     }
 
