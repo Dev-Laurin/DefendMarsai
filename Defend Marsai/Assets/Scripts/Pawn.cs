@@ -234,7 +234,7 @@ public class Pawn : MonoBehaviour
         }  
         _hp = _hp - damageTaken; 
 
-        if(_hp < 0){
+        if(_hp <= 0){
             _hp = 0; 
             _battleSystem.RemoveUnit(gameObject); 
         }

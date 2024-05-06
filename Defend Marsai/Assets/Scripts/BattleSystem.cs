@@ -276,13 +276,12 @@ public class BattleSystem : MonoBehaviour
         Debug.Log($"Removing {pawn}"); 
         Pawn unit = pawn.GetComponent<Pawn>(); 
         if(unit.isEnemy()){
-            _enemyPawns.Remove(pawn);
-            Destroy(pawn); 
+            _enemyPawns.Remove(pawn);  
         }
         else{
             _playerPawns.Remove(pawn); 
         }
-
+        Destroy(pawn);
         CheckEndState(); 
     }
 
@@ -358,7 +357,9 @@ public class BattleSystem : MonoBehaviour
     public IEnumerator AttackButtonPressed(){
         Debug.Log("Attack Button pressed."); 
         Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
-        otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
+        Debug.Log("Calling Take Damage"); 
+        yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
+        Debug.Log("updating options menu"); 
         _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
         yield return new WaitForSeconds(2); 
         _uiManager.DisplayOptions(false); 

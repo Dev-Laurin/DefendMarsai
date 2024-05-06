@@ -6847,11 +6847,11 @@ MonoBehaviour:
   - {fileID: 611067766, guid: 34baa37c304c54b42a9f9e0d968b9b6b, type: 3}
   - {fileID: 1990708530, guid: 34baa37c304c54b42a9f9e0d968b9b6b, type: 3}
   _secondsBetSprites:
-  - 4
+  - 2
   - 0.1
   - 0.1
   - 0.1
-  - 4
+  - 2
 --- !u!1 &1319129816
 GameObject:
   m_ObjectHideFlags: 0
