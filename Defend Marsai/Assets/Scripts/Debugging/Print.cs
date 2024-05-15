@@ -14,5 +14,12 @@ public static class Print
             Debug.Log(copy.Dequeue());
         }
     }
+
+    public static string List<T>(List<T> list){
+        foreach(T item in list){
+            Debug.Log(item); 
+        }
+        return null; 
+    }
     
 }

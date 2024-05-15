@@ -3,37 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UISpriteAnimation : MonoBehaviour
+public class PlayUISpriteAnimation : MonoBehaviour
 {
+    private SpriteAnimation _spriteAnimation; 
+    private List<Sprite> _sprites; 
+    private List<float> _secondsBetSprites; 
 
-    [SerializeField] private float _speed = 0.2f; 
-    [SerializeField] private float _animationLengthSeconds = 5.0f; 
-    [SerializeField] private List<Sprite> _sprites; 
-    [SerializeField] private List<float> _secondsBetSprites; 
     private int _index = 0; 
+    private bool _isDone;
     private Image _image; 
-    private bool _isDone; 
 
     public void StopAnimation(){
         _isDone = true; 
         StopCoroutine(PlayAnimation());  
     }
 
-    public void StartAnimation(){
+    public void StartAnimation(SpriteAnimation spriteAnim, Image image){
+        _image = image; 
+        _spriteAnimation = spriteAnim; 
+        _secondsBetSprites = _spriteAnimation.GetSecondsBetSprites(); 
+        _sprites = _spriteAnimation.GetSprites(); 
         _isDone = false; 
         StartCoroutine(PlayAnimation()); 
     }
 
-    IEnumerator PlayAnimation(){
+    private IEnumerator PlayAnimation(){
+        Debug.Log("Started playing animation"); 
         int secondsIndex = _index - 1; 
         if(secondsIndex <= 0){
             secondsIndex = 0; 
         }
+        Debug.Log("Before wait for seconds"); 
         yield return new WaitForSeconds(_secondsBetSprites[secondsIndex]); 
 
+        Debug.Log("After wait for seconds"); 
         if(_index >= _sprites.Count){
             _index = 0; 
         }
+        Debug.Log("Before image override"); 
 
         _image.overrideSprite = _sprites[_index]; 
         _image.SetMaterialDirty(); 
@@ -44,9 +51,4 @@ public class UISpriteAnimation : MonoBehaviour
         }
 
     }
-
-    void Start(){
-        _image = gameObject.GetComponent<Image>(); 
-    }
-
 }

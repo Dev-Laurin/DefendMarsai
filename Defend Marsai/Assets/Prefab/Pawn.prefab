@@ -125,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Henry
   _movement: 3
-  _strength: 10
+  _strength: 15
   _speed: 6
   _defense: 0
   _will: 6

@@ -55,14 +55,17 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void InstantiatePawns(){
+        Debug.Log("Instantiating Pawns"); 
         var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
         _playerPawns.Add(pawn); 
+        Debug.Log($"Player Pawns Count: {_playerPawns.Count}"); 
     }
 
     private void InstantiateEnemies(){
+        Debug.Log("Instantiate Enemies "); 
         for(var i = 0; i<_enemyCount; i++){
             var x = _map.Count - 1 - i; 
             var z = _map[x].Count - 1 - i; 
@@ -74,6 +77,7 @@ public class BattleSystem : MonoBehaviour
             enemyScript.SetAsEnemy(true);
             _enemyPawns.Add(enemy); 
         }
+        Debug.Log($"Enemy count: {_enemyPawns.Count}"); 
     }
 
     private void InstantiateCamera(){
@@ -166,8 +170,8 @@ public class BattleSystem : MonoBehaviour
     private List<GameObject> findInteractableUnits(GameObject selectedPawn){
         List<GameObject> unitsInRange = new List<GameObject>(); 
 
-        List<GameObject> allPawns = _playerPawns; 
-
+        List<GameObject> allPawns = new List<GameObject>(); 
+        allPawns.AddRange(_playerPawns); 
         allPawns.AddRange(_enemyPawns);  
 
         foreach(GameObject pawn in allPawns){
@@ -262,6 +266,11 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void CheckEndState(){
+        Debug.Log("Checking end state"); 
+        Debug.Log($"Player Pawn count {_playerPawns.Count}"); 
+        Debug.Log(Print.List(_playerPawns)); 
+        Debug.Log($"Enemy Pawn count {_enemyPawns.Count}"); 
+
         if(_playerPawns.Count <= 0){
             _state = State.LOSE; 
             _uiManager.ShowLoseUI(); 
@@ -281,8 +290,8 @@ public class BattleSystem : MonoBehaviour
         else{
             _playerPawns.Remove(pawn); 
         }
-        Destroy(pawn);
         CheckEndState(); 
+        Destroy(pawn);
     }
 
     public void HighlightAvailableTiles(List<Tile> tiles){ 
@@ -355,15 +364,19 @@ public class BattleSystem : MonoBehaviour
     }
 
     public IEnumerator AttackButtonPressed(){
-        Debug.Log("Attack Button pressed."); 
-        Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
-        Debug.Log("Calling Take Damage"); 
-        yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
-        Debug.Log("updating options menu"); 
-        _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
-        yield return new WaitForSeconds(2); 
-        _uiManager.DisplayOptions(false); 
-        EndPlayerTurn(); 
+        Debug.Log($"State is {_state}"); 
+        if(_state != State.PLAYER_TURN ){
+            //accidental over-press, ignore
+            yield break; 
+        }
+        else{
+            Debug.Log("Attack Button pressed."); 
+            Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
+            Debug.Log("Calling Take Damage"); 
+            yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
+            _uiManager.DisplayOptions(false); 
+            EndPlayerTurn(); 
+        }
     }
 
     public void EndUnitTurnButtonPressed(){

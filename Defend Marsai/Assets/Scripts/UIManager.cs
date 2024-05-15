@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _classImage;
     [SerializeField] private GameObject _turnTextUI; 
     [SerializeField] private GameObject _options; 
+    [SerializeField] private GameObject _actions;
 
     //Battle Options UI
     //unit 1 
@@ -55,9 +56,9 @@ public class UIManager : MonoBehaviour
         _hpUI.GetComponent<Slider>().value = pawn.GetHP(); 
         _hpUI.GetComponent<Slider>().maxValue = pawn.GetMaxHP(); 
         _nameUI.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetName(); 
-        _portraitImage.GetComponent<UISpriteAnimation>().StopAnimation(); 
+        _portraitImage.GetComponent<UISpriteAnimationManager>().StopAnimation(); 
         _portraitImage.GetComponent<Image>().overrideSprite = pawn.GetPortrait(); 
-        _portraitImage.GetComponent<UISpriteAnimation>().StartAnimation(); 
+        _portraitImage.GetComponent<UISpriteAnimationManager>().StartAnimation(); 
         _classImage.GetComponent<Image>().overrideSprite = pawn.GetClassImage(); 
     }
 
@@ -85,6 +86,7 @@ public class UIManager : MonoBehaviour
         _unit2Image.GetComponent<Image>().overrideSprite = otherPawn.GetPortrait(); 
 
         _options.SetActive(true); 
+        _actions.SetActive(true); 
 
         UpdateOptionSliders(pawn, otherPawn); 
     }
@@ -107,6 +109,7 @@ public class UIManager : MonoBehaviour
 
     public void DisplayOptions(bool show){
         _options.SetActive(show); 
+        _actions.SetActive(show); 
     }
 
     public void UpdateTurnText(string text){
@@ -115,6 +118,9 @@ public class UIManager : MonoBehaviour
 
     public void ShowPortrait(bool show){
         _portraitPanel.SetActive(show); 
+        if(!show){
+            _portraitImage.GetComponent<UISpriteAnimationManager>().StopAnimation();
+        }
     }
 
     public void ShowLoseUI(){

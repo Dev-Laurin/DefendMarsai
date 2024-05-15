@@ -138,6 +138,16 @@ public class Pawn : MonoBehaviour
         }
     }
 
+    IEnumerator PlayDamageAnimation(){
+        Debug.Log("Playing Damage Animation"); 
+        if(!isSelected){
+            _oldMatColor = _renderer.material.color;
+        }
+        _renderer.material.color = new Color(1, 0.5f, 0.5f, 1); 
+        yield return new WaitForSeconds(1); 
+        _renderer.material.color = _oldMatColor;
+    }
+
     void ShowPortrait(){
         _uiManager.ShowPortrait(true); 
     }
@@ -240,6 +250,7 @@ public class Pawn : MonoBehaviour
         }
 
         IncreaseFatigue(1); 
+        StartCoroutine(PlayDamageAnimation()); 
 
         return damageTaken; 
     }
@@ -256,8 +267,6 @@ public class Pawn : MonoBehaviour
         } 
         return damage; 
     }
-
-    
 
     public void SetCurrentTile(Tile tile){
         _currentTile = tile; 
