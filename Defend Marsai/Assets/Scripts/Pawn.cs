@@ -78,13 +78,13 @@ public class Pawn : MonoBehaviour
     }
 
     void OnMouseEnter(){
-        if(!isSelected && _battleSystem.isSelectable()){
+        if(!isSelected && _battleSystem.isSelectable() && _uiManager.IsPlayState()){
             Highlight(); 
         }
     }
     
     void OnMouseExit(){
-        if(!isSelected && _battleSystem.isSelectable()){
+        if(!isSelected && _battleSystem.isSelectable() && _uiManager.IsPlayState()){
             Unhighlight(); 
         }
     }
@@ -128,7 +128,7 @@ public class Pawn : MonoBehaviour
     }
 
     void OnMouseDown(){
-        if(_battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption()){
+        if(_battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption() && _uiManager.IsPlayState()){
             if(isSelected){
                 Deselect(); 
             }

@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
     private Color _oldMatColor; 
     private GameManager _gameManager; 
     private BattleSystem _battleSystem; 
+    private UIManager _uiManager;
     public TextMesh _text; 
     [SerializeField] private Material _oldMat; 
     [SerializeField] private int _oldMatIndex;
@@ -27,6 +28,7 @@ public class Tile : MonoBehaviour
     void Start(){
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
         _battleSystem = _gameManager.GetBattleSystem(); 
+        _uiManager = _gameManager.GetUIManager(); 
         _oldMatIndex = 0; 
         _oldMat = gameObject.GetComponent<Renderer>().materials[0];
         _originalMat = gameObject.GetComponent<Renderer>().materials[0];
@@ -74,16 +76,20 @@ public class Tile : MonoBehaviour
     }
 
     void OnMouseEnter(){
-        ChangeTilesMat(_highlightMat, 0); 
+        if(_uiManager.IsPlayState()){
+            ChangeTilesMat(_highlightMat, 0); 
+        }
     }
     
     void OnMouseExit(){
-        RevertTilesMat(); 
+        if(_uiManager.IsPlayState()){
+            RevertTilesMat(); 
+        }
     }
 
     void OnMouseDown(){
         Debug.Log($"Selectable {_selectable} for {gameObject.name} Is player turn {_battleSystem.isPlayerTurn()} awaiting player option {_battleSystem.AwaitingPlayerOption()}"); 
-        if(_selectable && _battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption()){
+        if(_selectable && _battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption() && _uiManager.IsPlayState()){
             RevertToOriginalTilesMat();
             _battleSystem.TileSelected(gameObject); 
         } 

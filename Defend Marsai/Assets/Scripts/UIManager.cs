@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public enum UIState{
+        PLAY = 1,
+        IN_MENU = 2
+    }
+    private UIState _state; 
+
     //Battle UI
     [SerializeField] private GameObject _strengthUI; 
     [SerializeField] private GameObject _speedUI;
@@ -89,6 +95,8 @@ public class UIManager : MonoBehaviour
         _actions.SetActive(true); 
 
         UpdateOptionSliders(pawn, otherPawn); 
+
+        _state = UIState.IN_MENU; 
     }
 
     private void UpdateOptionSliders(Pawn pawn, Pawn otherPawn){
@@ -100,16 +108,26 @@ public class UIManager : MonoBehaviour
         _unit2HPSliderUI.GetComponent<Slider>().maxValue = otherPawn.GetMaxHP();
         _unit2FatigueSliderUI.GetComponent<Slider>().value = otherPawn.GetFatigue();
         _unit2FatigueSliderUI.GetComponent<Slider>().maxValue = otherPawn.GetMaxFatigue();
+        _state = UIState.IN_MENU; 
     }
 
     public void StartBattleUI(){
         _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>();
         ShowEndBattleMenu(false); 
+        _state = UIState.PLAY; 
     }
 
     public void DisplayOptions(bool show){
         _options.SetActive(show); 
         _actions.SetActive(show); 
+
+        if(show){
+            _state = UIState.IN_MENU;
+        }
+        else{
+            _state = UIState.PLAY; 
+        }
+         
     }
 
     public void UpdateTurnText(string text){
@@ -135,5 +153,14 @@ public class UIManager : MonoBehaviour
 
     public void ShowEndBattleMenu(bool show){
         _menuPanel.SetActive(show); 
+        _state = UIState.IN_MENU;
+    }
+
+    public bool IsMenuState(){
+        return _state == UIState.IN_MENU; 
+    }
+
+    public bool IsPlayState(){
+        return _state == UIState.PLAY; 
     }
 }
