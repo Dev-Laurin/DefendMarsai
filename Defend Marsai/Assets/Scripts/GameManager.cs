@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     public void ResetMatchButtonPressed(){
         Debug.Log("Re-match!"); 
         _uiManager.StartBattleUI(); 
-        _battleSystem.StartBattle(); 
+        _battleSystem.RestartBattle(); 
     }
 
     public void QuitButtonPressed(){

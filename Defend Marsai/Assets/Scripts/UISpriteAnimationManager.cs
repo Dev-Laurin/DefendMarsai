@@ -33,19 +33,17 @@ public class UISpriteAnimationManager : MonoBehaviour
     }
 
     private IEnumerator PlayAnimation(){
-        Debug.Log("Started playing animation"); 
+
         int secondsIndex = _index - 1; 
         if(secondsIndex <= 0){
             secondsIndex = 0; 
         }
-        Debug.Log("Before wait for seconds"); 
+
         yield return new WaitForSeconds(_secondsBetSprites[secondsIndex]); 
 
-        Debug.Log("After wait for seconds"); 
         if(_index >= _sprites.Count){
             _index = 0; 
         }
-        Debug.Log("Before image override"); 
 
         _image.overrideSprite = _sprites[_index]; 
         _image.SetMaterialDirty(); 
@@ -69,7 +67,6 @@ public class UISpriteAnimationManager : MonoBehaviour
 
     public void SwitchAnimation(int animationIndex){
         if(animationIndex < _spriteAnimations.Count && animationIndex > -1){
-            Debug.Log($"Switching Animation to {_spriteAnimations[animationIndex]}"); 
             PlayerStopAnimation(); 
             _currentAnimationIndex = animationIndex; 
             PlayerStartAnimation(_currentAnimation, _image); 
@@ -80,15 +77,12 @@ public class UISpriteAnimationManager : MonoBehaviour
     }
 
     public void StopAnimation(){
-        Debug.Log($"current animation index: {_currentAnimationIndex}"); 
         if(_currentAnimationIndex < _spriteAnimations.Count && _currentAnimationIndex > -1){
             PlayerStopAnimation(); 
         }
     }
 
     public void StartAnimation(){
-        Debug.Log($"current animation index: {_currentAnimationIndex}");
-        Debug.Log($"animation count: {_spriteAnimations.Count}");
         if(_currentAnimationIndex < _spriteAnimations.Count && _currentAnimationIndex > -1){
             _currentAnimation = _spriteAnimations[_currentAnimationIndex]; 
             PlayerStartAnimation(_currentAnimation, _image); 

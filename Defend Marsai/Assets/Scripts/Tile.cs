@@ -33,6 +33,7 @@ public class Tile : MonoBehaviour
     }
 
     public void HighlightTile(Color color){
+        Debug.Log($"Highlighting tile {gameObject.name}"); 
         var tileRenderer = gameObject.GetComponent<Renderer>(); 
         _oldMatColor = gameObject.GetComponent<Renderer>().material.color; 
         tileRenderer.material.color = color; 
@@ -63,10 +64,12 @@ public class Tile : MonoBehaviour
     }
 
     public void SetSelection(bool selectable){
+        Debug.Log($"Setting {gameObject.name} selection to {selectable}"); 
         _selectable = selectable; 
     }
 
     public void DeHighlightTile(){
+        Debug.Log($"Dehighlighting {gameObject.name}"); 
         gameObject.GetComponent<Renderer>().material.color = _oldMatColor; 
     }
 
@@ -79,7 +82,7 @@ public class Tile : MonoBehaviour
     }
 
     void OnMouseDown(){
-        Debug.Log($"Selectable {_selectable} Is player turn {_battleSystem.isPlayerTurn()} awaiting player option {_battleSystem.AwaitingPlayerOption()}"); 
+        Debug.Log($"Selectable {_selectable} for {gameObject.name} Is player turn {_battleSystem.isPlayerTurn()} awaiting player option {_battleSystem.AwaitingPlayerOption()}"); 
         if(_selectable && _battleSystem.isPlayerTurn() && !_battleSystem.AwaitingPlayerOption()){
             RevertToOriginalTilesMat();
             _battleSystem.TileSelected(gameObject); 

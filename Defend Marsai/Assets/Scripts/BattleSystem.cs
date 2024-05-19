@@ -23,11 +23,11 @@ public class BattleSystem : MonoBehaviour
 
     //map
     [SerializeField] private int _width, _height = 10; 
-    private List<List<GameObject>> _map = new List<List<GameObject>>(); 
+    private List<List<GameObject>> _map; 
 
     //pawns
-    private List<GameObject> _playerPawns = new List<GameObject>(); 
-    private List<GameObject> _enemyPawns = new List<GameObject>(); 
+    private List<GameObject> _playerPawns; 
+    private List<GameObject> _enemyPawns; 
     private GameObject _selectedPawn;
     private GameObject _selectedPawn2; 
     private List<Tile> _availableTiles;
@@ -45,6 +45,9 @@ public class BattleSystem : MonoBehaviour
 
 
     public void StartBattle(){
+        _map = new List<List<GameObject>>();
+        _playerPawns = new List<GameObject>(); 
+        _enemyPawns = new List<GameObject>(); 
         _gameManager = gameObject.GetComponent<GameManager>(); 
         _uiManager = _gameManager.GetUIManager(); 
         GenerateMap(); 
@@ -52,6 +55,31 @@ public class BattleSystem : MonoBehaviour
         InstantiatePawns(); 
         InstantiateEnemies(); 
         PlayerTurn();  
+    }
+
+    public void RestartBattle(){
+        removePawns(); 
+        removeTiles(); 
+        StartBattle(); 
+    }
+
+    private void removeTiles(){
+        foreach(List<GameObject> list in _map){
+            foreach(GameObject obj in list){
+                Destroy(obj); 
+            }
+        }
+    }
+
+    private void removePawns(){
+        ResetVars(); 
+        foreach(GameObject obj in _playerPawns){
+            Destroy(obj); 
+        }
+        foreach(GameObject obj in _enemyPawns){
+            Destroy(obj); 
+        }
+        
     }
 
     private void InstantiatePawns(){
@@ -73,7 +101,6 @@ public class BattleSystem : MonoBehaviour
             var enemyScript = enemy.GetComponent<Pawn>(); 
             enemyScript.Start(); 
             enemyScript.SetCurrentTile(_map[x][z].GetComponent<Tile>());
-            enemyScript.UpdateUI();
             enemyScript.SetAsEnemy(true);
             _enemyPawns.Add(enemy); 
         }
@@ -81,11 +108,16 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void InstantiateCamera(){
+        Debug.Log($"Camera x rotation: {_cam.transform.rotation.x}"); 
+        if(_cam.transform.rotation.x == 0.5){
+            return; 
+        }
         _cam.transform.position = new Vector3((float)_width/2 -0.5f, 8, -2); 
         _cam.transform.Rotate(60, 0, 0); 
     }
 
     private void GenerateMap(){
+        Debug.Log($"Generating Map: width: {_width} height: {_height}"); 
         for(int x = 0; x < _width; x++){
             _map.Add(new List<GameObject>()); 
             for(int z = 0; z < _height; z++){
@@ -295,7 +327,9 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void HighlightAvailableTiles(List<Tile> tiles){ 
+        Debug.Log("Highlighting Tiles"); 
         foreach(Tile tile in tiles){
+            Debug.Log($"tile: {tile}"); 
             tile.ChangeTilesMat(_availableMat, 0); 
             tile.SetSelection(true); 
         }
