@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     }
 
     public void AttackButtonPressed(){
-        Debug.Log("Attack button pressed, gamemanager"); 
         StartCoroutine(_battleSystem.AttackButtonPressed()); 
     }
 
@@ -43,13 +42,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void ResetMatchButtonPressed(){
-        Debug.Log("Re-match!"); 
         _uiManager.StartBattleUI(); 
         _battleSystem.RestartBattle(); 
     }
 
     public void QuitButtonPressed(){
-        Debug.Log("Thanks for playing, Good bye."); 
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false; 
         #else 

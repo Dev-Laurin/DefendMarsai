@@ -68,7 +68,6 @@ public class Pawn : MonoBehaviour
     }
 
     private void Unhighlight(){
-        Debug.Log($"Dehighlighting color: {_oldMatColor}"); 
         _renderer.material.color = _oldMatColor; 
     }
 
@@ -90,7 +89,6 @@ public class Pawn : MonoBehaviour
     }
 
     public bool UnitInRange(Pawn unit){
-        Debug.Log($"Unit to reach Tile: {unit.GetTile()}"); 
         var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
         return path.Count <= _range; 
     }
@@ -110,8 +108,6 @@ public class Pawn : MonoBehaviour
     }
 
     public void Select(){
-        Debug.Log($"Selected {gameObject} and in range {_battleSystem.InRange(gameObject)}"); 
-
         if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
             Highlight(isSelected);
@@ -139,7 +135,6 @@ public class Pawn : MonoBehaviour
     }
 
     IEnumerator PlayDamageAnimation(){
-        Debug.Log("Playing Damage Animation"); 
         if(!isSelected){
             _oldMatColor = _renderer.material.color;
         }

@@ -83,17 +83,14 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void InstantiatePawns(){
-        Debug.Log("Instantiating Pawns"); 
         var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
         pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
-        _playerPawns.Add(pawn); 
-        Debug.Log($"Player Pawns Count: {_playerPawns.Count}"); 
+        _playerPawns.Add(pawn);  
     }
 
     private void InstantiateEnemies(){
-        Debug.Log("Instantiate Enemies "); 
         for(var i = 0; i<_enemyCount; i++){
             var x = _map.Count - 1 - i; 
             var z = _map[x].Count - 1 - i; 
@@ -104,11 +101,9 @@ public class BattleSystem : MonoBehaviour
             enemyScript.SetAsEnemy(true);
             _enemyPawns.Add(enemy); 
         }
-        Debug.Log($"Enemy count: {_enemyPawns.Count}"); 
     }
 
     private void InstantiateCamera(){
-        Debug.Log($"Camera x rotation: {_cam.transform.rotation.x}"); 
         if(_cam.transform.rotation.x == 0.5){
             return; 
         }
@@ -117,7 +112,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void GenerateMap(){
-        Debug.Log($"Generating Map: width: {_width} height: {_height}"); 
         for(int x = 0; x < _width; x++){
             _map.Add(new List<GameObject>()); 
             for(int z = 0; z < _height; z++){
@@ -173,7 +167,6 @@ public class BattleSystem : MonoBehaviour
 
     //Player has selected a unit to perform an action on
     public void UnitSelected(GameObject pawn){
-        Debug.Log($"Selected {pawn} (battlesystem)"); 
         _selectedPawn2 = pawn; 
         _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
     }
@@ -188,11 +181,9 @@ public class BattleSystem : MonoBehaviour
     }
 
     public bool HighlightInteractableUnits(GameObject pawn){
-        Debug.Log("Highlighting interactable units"); 
         List<GameObject> units = findInteractableUnits(pawn); 
         bool moreActions = units.Count > 0; 
         if(moreActions){
-            Debug.Log($"Auto-selecting {units[0]}"); 
             units[0].GetComponent<Pawn>().Select(); 
         }
         
@@ -237,7 +228,6 @@ public class BattleSystem : MonoBehaviour
         foreach(GameObject pawn in _enemyPawns){
             yield return StartCoroutine(AttackPlayer(pawn.GetComponent<Pawn>()));  
         }
-        
         yield return new WaitForSeconds(1); 
         PlayerTurn(); 
     }
@@ -264,6 +254,7 @@ public class BattleSystem : MonoBehaviour
 
         int pathCount = 0; 
         if(path != null){
+            Debug.Log($"Path Count in pre-loop: {path.Count}"); 
             pathCount = path.Count; 
             int availableMovement = pawn.GetMovement(); 
             while(availableMovement > 0 && path.Count > 0){
@@ -285,11 +276,13 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(1); 
         }
 
-        if(pathCount <= pawn.GetRange()){
+        Debug.Log($"unit in range {pawn.UnitInRange(pawnToAttack)}"); 
+        if(pawn.UnitInRange(pawnToAttack)){
             Debug.Log("Attack the player"); 
             //we can attack the unit
             if(pawnToAttack){
-                Debug.Log($"Dealt {pawnToAttack.TakeDamage(pawn.GetStrength())} Damage"); 
+                int damage = pawnToAttack.TakeDamage(pawn.GetStrength()); 
+                Debug.Log($"Dealt {damage} Damage"); 
             }
         }
 
@@ -298,11 +291,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void CheckEndState(){
-        Debug.Log("Checking end state"); 
-        Debug.Log($"Player Pawn count {_playerPawns.Count}"); 
-        Debug.Log(Print.List(_playerPawns)); 
-        Debug.Log($"Enemy Pawn count {_enemyPawns.Count}"); 
-
         if(_playerPawns.Count <= 0){
             _state = State.LOSE; 
             _uiManager.ShowLoseUI(); 
@@ -314,7 +302,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void RemoveUnit(GameObject pawn){
-        Debug.Log($"Removing {pawn}"); 
         Pawn unit = pawn.GetComponent<Pawn>(); 
         if(unit.isEnemy()){
             _enemyPawns.Remove(pawn);  
@@ -327,16 +314,13 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void HighlightAvailableTiles(List<Tile> tiles){ 
-        Debug.Log("Highlighting Tiles"); 
         foreach(Tile tile in tiles){
-            Debug.Log($"tile: {tile}"); 
             tile.ChangeTilesMat(_availableMat, 0); 
             tile.SetSelection(true); 
         }
     }
 
     public void DeHighlightTiles(){
-        Debug.Log("Dehighlighting tiles"); 
         foreach(Tile tile in _availableTiles){
             tile.RevertToOriginalTilesMat(); 
             tile.SetSelection(false); 
@@ -371,7 +355,6 @@ public class BattleSystem : MonoBehaviour
             if(!isEnemy){
                 _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
                 List<GameObject> interactableUnits = findInteractableUnits(pawn);
-                Debug.Log($"Num of interactable units {interactableUnits.Count}"); 
                 if(interactableUnits.Count > 0){
                     _playerChoosingOptions = true; 
                     _uiManager.UpdateOptionsMenu(pawn.GetComponent<Pawn>(), interactableUnits[0].GetComponent<Pawn>()); 
@@ -398,15 +381,12 @@ public class BattleSystem : MonoBehaviour
     }
 
     public IEnumerator AttackButtonPressed(){
-        Debug.Log($"State is {_state}"); 
         if(_state != State.PLAYER_TURN ){
             //accidental over-press, ignore
             yield break; 
         }
         else{
-            Debug.Log("Attack Button pressed."); 
             Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
-            Debug.Log("Calling Take Damage"); 
             yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
             _uiManager.DisplayOptions(false); 
             EndPlayerTurn(); 
@@ -414,7 +394,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void EndUnitTurnButtonPressed(){
-        Debug.Log("End Unit Turn button pressed."); 
         _uiManager.DisplayOptions(false); 
         EndPlayerTurn(); 
     }
