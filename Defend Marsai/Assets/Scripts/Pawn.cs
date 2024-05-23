@@ -32,7 +32,8 @@ public class Pawn : MonoBehaviour
     [SerializeField] private GameObject _portrait;
     [SerializeField] private Sprite _portraitImage;
     [SerializeField] private Sprite _classImage;
-    [SerializeField] private RuntimeAnimatorController _portraitAnimator; 
+    [SerializeField] private RuntimeAnimatorController _portraitAnimator;
+    [SerializeField] private SpriteAnimation _portraitAnimation;  
         
     //position
     [SerializeField] private Tile _currentTile;
@@ -54,6 +55,10 @@ public class Pawn : MonoBehaviour
 
     public void UpdateUI(){
         _uiManager.UpdateSelectionUI(gameObject.GetComponent<Pawn>()); 
+    }
+
+    public SpriteAnimation GetPortraitAnimation(){
+        return _portraitAnimation; 
     }
 
     public void SetAsEnemy(bool isEnemy){

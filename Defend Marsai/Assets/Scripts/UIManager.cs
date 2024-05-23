@@ -62,9 +62,9 @@ public class UIManager : MonoBehaviour
         _hpUI.GetComponent<Slider>().value = pawn.GetHP(); 
         _hpUI.GetComponent<Slider>().maxValue = pawn.GetMaxHP(); 
         _nameUI.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetName(); 
-        _portraitImage.GetComponent<UISpriteAnimationManager>().StopAnimation(); 
+        _portraitImage.GetComponent<UISpriteAnimationManager>().PlayerStopAnimation(); 
         _portraitImage.GetComponent<Image>().overrideSprite = pawn.GetPortrait(); 
-        _portraitImage.GetComponent<UISpriteAnimationManager>().StartAnimation(); 
+        _portraitImage.GetComponent<UISpriteAnimationManager>().PlayerStartAnimation(pawn.GetPortraitAnimation()); 
         _classImage.GetComponent<Image>().overrideSprite = pawn.GetClassImage(); 
     }
 

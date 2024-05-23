@@ -19,17 +19,24 @@ public class UISpriteAnimationManager : MonoBehaviour
     private Image _image; 
 
     public void PlayerStopAnimation(){
+        Debug.Log($"Stopping animation: {_spriteAnimation}"); 
         _isDone = true; 
         StopCoroutine(PlayAnimation());  
     }
 
-    public void PlayerStartAnimation(SpriteAnimation spriteAnim, Image image){
-        _image = image; 
-        _spriteAnimation = spriteAnim; 
-        _secondsBetSprites = _spriteAnimation.GetSecondsBetSprites(); 
-        _sprites = _spriteAnimation.GetSprites(); 
-        _isDone = false; 
-        StartCoroutine(PlayAnimation()); 
+    public void PlayerStartAnimation(SpriteAnimation spriteAnim){
+        Debug.Log($"Playing animation: {spriteAnim}"); 
+        if(spriteAnim){
+            _spriteAnimation = spriteAnim; 
+            _secondsBetSprites = _spriteAnimation.GetSecondsBetSprites(); 
+            _sprites = _spriteAnimation.GetSprites(); 
+            _isDone = false; 
+            StartCoroutine(PlayAnimation()); 
+        }
+        else{
+            Debug.Log("UISpriteAnimationManager(method PlayerStartAnimation) No sprite animation given."); 
+        }
+        
     }
 
     private IEnumerator PlayAnimation(){
@@ -69,7 +76,7 @@ public class UISpriteAnimationManager : MonoBehaviour
         if(animationIndex < _spriteAnimations.Count && animationIndex > -1){
             PlayerStopAnimation(); 
             _currentAnimationIndex = animationIndex; 
-            PlayerStartAnimation(_currentAnimation, _image); 
+            PlayerStartAnimation(_currentAnimation); 
         }
         else{
             Debug.Log($"Animation Manager: Animation Index is out of range. {animationIndex}"); 
@@ -85,7 +92,7 @@ public class UISpriteAnimationManager : MonoBehaviour
     public void StartAnimation(){
         if(_currentAnimationIndex < _spriteAnimations.Count && _currentAnimationIndex > -1){
             _currentAnimation = _spriteAnimations[_currentAnimationIndex]; 
-            PlayerStartAnimation(_currentAnimation, _image); 
+            PlayerStartAnimation(_currentAnimation); 
         }
     }
 }
