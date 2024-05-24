@@ -36,6 +36,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _unit1SpeedUI; 
     [SerializeField] private GameObject _unit1WillUI; 
     [SerializeField] private GameObject _unit1ClassUI; 
+    [SerializeField] private GameObject _actionTypeImage; 
+
     //unit 2
     [SerializeField] private GameObject _unit2Image; 
     [SerializeField] private GameObject _unit2HPSliderUI;
@@ -91,8 +93,10 @@ public class UIManager : MonoBehaviour
         _unit2WillUI.GetComponent<TMPro.TextMeshProUGUI>().text = otherPawn.GetWill().ToString();
         _unit2Image.GetComponent<Image>().overrideSprite = otherPawn.GetPortrait(); 
 
-        _options.SetActive(true); 
-        _actions.SetActive(true); 
+        bool active = true; 
+        _actionTypeImage.SetActive(active); 
+        _options.SetActive(active); 
+        _actions.SetActive(active); 
 
         UpdateOptionSliders(pawn, otherPawn); 
 
@@ -113,13 +117,17 @@ public class UIManager : MonoBehaviour
 
     public void StartBattleUI(){
         _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>();
-        ShowEndBattleMenu(false); 
+        bool active = false; 
+        ShowPortrait(active); 
+        DisplayOptions(active); 
+        ShowEndBattleMenu(active); 
         _state = UIState.PLAY; 
     }
 
     public void DisplayOptions(bool show){
         _options.SetActive(show); 
         _actions.SetActive(show); 
+        _actionTypeImage.SetActive(show); 
 
         if(show){
             _state = UIState.IN_MENU;
