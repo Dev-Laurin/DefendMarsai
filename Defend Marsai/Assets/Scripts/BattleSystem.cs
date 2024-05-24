@@ -236,7 +236,7 @@ public class BattleSystem : MonoBehaviour
         ResetVars(); 
         _state = State.PLAYER_TURN;
         var _uiManager = _gameManager.GetUIManager();
-        _uiManager.UpdateTurnText("Player Turn");  
+        _uiManager.UpdateTurnText("Your Turn");  
         Debug.Log("Player Turn"); 
     }
 
