@@ -18,6 +18,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private GameObject tile;
     [SerializeField] private Transform _cam; 
     [SerializeField] private GameObject _pawn; 
+    [SerializeField] private GameObject _pawn2; 
     [SerializeField] private GameObject _enemy; 
     [SerializeField] private Material _availableMat; 
 
@@ -83,11 +84,19 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void InstantiatePawns(){
-        var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
+        var tile1 = _map[1][1]; 
+        Debug.Log(tile1.transform.position); 
+        var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(tile1.transform.position.x, tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
-        pawnScript.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
+        pawnScript.SetCurrentTile(tile1.GetComponent<Tile>()); 
         _playerPawns.Add(pawn);  
+
+        var pawn2 = MonoBehaviour.Instantiate(_pawn2, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
+        var pawnScript2 = pawn2.GetComponent<Pawn>(); 
+        pawnScript2.Start(); 
+        pawnScript2.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
+        _playerPawns.Add(pawn2);  
     }
 
     private void InstantiateEnemies(){

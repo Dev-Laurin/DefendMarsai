@@ -9243,6 +9243,7 @@ MonoBehaviour:
   tile: {fileID: 7131768778672521535, guid: ccda9d25139884cd1aad97b9d0d84cd7, type: 3}
   _cam: {fileID: 330585546}
   _pawn: {fileID: 3170752887869082363, guid: b0dc13099c9154b3c92849cb24fcec40, type: 3}
+  _pawn2: {fileID: 7878146187684419754, guid: b1aa473fdb4bf45898c0fb4d2fea6a2a, type: 3}
   _enemy: {fileID: 916316968987233905, guid: 75b574ec0518e4cf9881c2ca10a627f4, type: 3}
   _availableMat: {fileID: 2100000, guid: 928121b04cae9487f8e0b508f4104bf5, type: 2}
   _width: 10
