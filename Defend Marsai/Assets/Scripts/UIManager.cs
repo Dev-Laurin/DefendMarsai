@@ -116,11 +116,23 @@ public class UIManager : MonoBehaviour
     }
 
     public void StartBattleUI(){
-        _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>();
+        try{
+            _turnText = _turnTextUI.GetComponent<TMPro.TextMeshProUGUI>();
+        }
+        catch{
+            Debug.Log("Turn Text UI not found."); 
+        }
+
         bool active = false; 
-        ShowPortrait(active); 
-        DisplayOptions(active); 
-        ShowEndBattleMenu(active); 
+        try{
+            ShowPortrait(active); 
+            DisplayOptions(active); 
+            ShowEndBattleMenu(active); 
+        }
+        catch{
+            Debug.Log("UI elements disabled"); 
+        }
+         
         _state = UIState.PLAY; 
     }
 

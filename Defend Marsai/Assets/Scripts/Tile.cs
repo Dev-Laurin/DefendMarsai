@@ -26,9 +26,15 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material _highlightMat; 
 
     void Start(){
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
-        _battleSystem = _gameManager.GetBattleSystem(); 
-        _uiManager = _gameManager.GetUIManager(); 
+        try{
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
+            _battleSystem = _gameManager.GetBattleSystem(); 
+            _uiManager = _gameManager.GetUIManager(); 
+        }
+        catch{
+            //Debug.Log("GameManager not found."); 
+        }
+        
         _oldMatIndex = 0; 
         _oldMat = gameObject.GetComponent<Renderer>().materials[0];
         _originalMat = gameObject.GetComponent<Renderer>().materials[0];

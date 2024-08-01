@@ -8,6 +8,9 @@ public static class PathFinding
     public delegate List<Tile> FindNeighborsFunction(Tile tile);
 
     public static List<Tile> DijkstraAvailableTiles(Tile start, int movement, FindNeighborsFunction FindNeighbors){
+        if(movement <= 0){
+            return null;
+        }
         PriorityQueue<Tile> _priorityQueue = new PriorityQueue<Tile>(); 
         Dictionary<Tile, int> _costToReachTile = new Dictionary<Tile, int>(); 
         Dictionary<Tile, Tile> nextTileToGoal = new Dictionary<Tile, Tile>();  

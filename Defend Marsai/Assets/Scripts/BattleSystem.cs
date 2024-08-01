@@ -15,7 +15,7 @@ public class BattleSystem : MonoBehaviour
 {
 
     //prefabs
-    [SerializeField] private GameObject tile;
+    [SerializeField] private GameObject _tile;
     [SerializeField] private Transform _cam; 
     [SerializeField] private GameObject _pawn; 
     [SerializeField] private GameObject _pawn2; 
@@ -23,7 +23,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private Material _availableMat; 
 
     //map
-    [SerializeField] private int _width, _height = 10; 
+    [SerializeField] private int _width = 10, _height = 10; 
     private List<List<GameObject>> _map; 
 
     //pawns
@@ -36,6 +36,7 @@ public class BattleSystem : MonoBehaviour
     //state
     private State _state; 
     private bool _playerChoosingOptions = false; 
+    private Dictionary<GameObject, int> unitsUsed = new Dictionary<GameObject, int>(); 
 
     //enemy
     [SerializeField] private int _enemyCount = 1;
@@ -51,11 +52,37 @@ public class BattleSystem : MonoBehaviour
         _enemyPawns = new List<GameObject>(); 
         _gameManager = gameObject.GetComponent<GameManager>(); 
         _uiManager = _gameManager.GetUIManager(); 
-        GenerateMap(); 
-        InstantiateCamera(); 
-        InstantiatePawns(); 
-        InstantiateEnemies(); 
-        PlayerTurn();  
+        _tile = Resources.Load<GameObject>("Prefab/Tile");
+        try{
+            GenerateMap();
+        }
+        catch{
+            Debug.Log("Using default cube to generate map. Prefab not set."); 
+             
+            //GenerateMap();
+        }
+        
+        try{
+            InstantiateCamera(); 
+            InstantiatePawns(); 
+            InstantiateEnemies(); 
+            resetUnitsUsed(); 
+            PlayerTurn();  
+        }
+        catch{
+            Debug.Log("BattleSystem: Camera could not be found."); 
+        }
+    }
+
+    private void resetUnitsUsed(){
+        for(int i=0; i<_playerPawns.Count; i++){
+            unitsUsed[_playerPawns[i]] = 1; 
+        }
+    }
+
+    private void unitTurnEnd(GameObject unit){
+        unitsUsed.Remove(unit); 
+        ResetVars(); 
     }
 
     public void RestartBattle(){
@@ -86,13 +113,13 @@ public class BattleSystem : MonoBehaviour
     private void InstantiatePawns(){
         var tile1 = _map[1][1]; 
         Debug.Log(tile1.transform.position); 
-        var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(tile1.transform.position.x, tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
+        var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(tile1.transform.position.x, _tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
         pawnScript.SetCurrentTile(tile1.GetComponent<Tile>()); 
         _playerPawns.Add(pawn);  
 
-        var pawn2 = MonoBehaviour.Instantiate(_pawn2, new Vector3(0, tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
+        var pawn2 = MonoBehaviour.Instantiate(_pawn2, new Vector3(0, _tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
         var pawnScript2 = pawn2.GetComponent<Pawn>(); 
         pawnScript2.Start(); 
         pawnScript2.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
@@ -103,7 +130,7 @@ public class BattleSystem : MonoBehaviour
         for(var i = 0; i<_enemyCount; i++){
             var x = _map.Count - 1 - i; 
             var z = _map[x].Count - 1 - i; 
-            var enemy = MonoBehaviour.Instantiate(_enemy, new Vector3(x, tile.transform.position.y + 0.1f, z), Quaternion.identity); 
+            var enemy = MonoBehaviour.Instantiate(_enemy, new Vector3(x, _tile.transform.position.y + 0.1f, z), Quaternion.identity); 
             var enemyScript = enemy.GetComponent<Pawn>(); 
             enemyScript.Start(); 
             enemyScript.SetCurrentTile(_map[x][z].GetComponent<Tile>());
@@ -121,11 +148,16 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void GenerateMap(){
+        Debug.Log("Generating map"); 
+        Debug.Log(_width); 
+        Debug.Log(_height); 
+        Debug.Log(_tile); 
         for(int x = 0; x < _width; x++){
             _map.Add(new List<GameObject>()); 
             for(int z = 0; z < _height; z++){
-                var spawnedTile = MonoBehaviour.Instantiate(tile, new Vector3(x, 0.0f, z), Quaternion.identity); 
+                var spawnedTile = MonoBehaviour.Instantiate(_tile, new Vector3(x, 0.0f, z), Quaternion.identity); 
                 spawnedTile.name = $"Tile {x} {z}"; 
+                Debug.Log($"Tile {x} {z}"); 
                 Tile spawnedTileComponent = spawnedTile.GetComponent<Tile>(); 
                 spawnedTileComponent.SetXCoord(x); 
                 spawnedTileComponent.SetZCoord(z); 
@@ -241,6 +273,10 @@ public class BattleSystem : MonoBehaviour
         PlayerTurn(); 
     }
 
+    public Tile GetTile(int x, int z){
+        return _map[x][z].GetComponent<Tile>(); 
+    }
+
     private void PlayerTurn(){
         ResetVars(); 
         _state = State.PLAYER_TURN;
@@ -286,6 +322,7 @@ public class BattleSystem : MonoBehaviour
         }
 
         Debug.Log($"unit in range {pawn.UnitInRange(pawnToAttack)}"); 
+        Debug.Log($"pawn to attack {pawnToAttack}"); 
         if(pawn.UnitInRange(pawnToAttack)){
             Debug.Log("Attack the player"); 
             //we can attack the unit
@@ -337,10 +374,19 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void ShowAvailableMovement(GameObject pawn){
+        _availableTiles = GetAvailableTilesFromGameObject(pawn);  
+        HighlightAvailableTiles(_availableTiles); 
+    }
+
+    public List<Tile> GetAvailableTilesFromGameObject(GameObject pawn){
         _selectedPawn = pawn; 
         int movement = pawn.GetComponent<Pawn>().GetMovement(); 
-        _availableTiles = PathFinding.DijkstraAvailableTiles(pawn.GetComponent<Pawn>().GetTile(), movement, FindNeighbors); 
-        HighlightAvailableTiles(_availableTiles); 
+        return GetAvailableTiles(pawn.GetComponent<Pawn>().GetTile(), movement); 
+    }
+
+    public List<Tile> GetAvailableTiles(Tile tile, int movement){
+        _availableTiles = PathFinding.DijkstraAvailableTiles(tile, movement, FindNeighbors); 
+        return _availableTiles; 
     }
 
     public void DeselectedPawn(){
@@ -378,13 +424,15 @@ public class BattleSystem : MonoBehaviour
             
             
             if(!isEnemy && !_playerChoosingOptions){
+                unitTurnEnd(pawn); 
                 EndPlayerTurn(); 
             }
         }
     }
     
     private void EndPlayerTurn(){
-        if(isPlayerTurn()){
+        if(isPlayerTurn() && unitsUsed.Count < 1){
+            resetUnitsUsed(); 
             StartCoroutine(EnemyTurn());
         }
     }
