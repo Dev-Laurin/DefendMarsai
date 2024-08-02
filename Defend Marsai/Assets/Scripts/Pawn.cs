@@ -106,6 +106,7 @@ public class Pawn : MonoBehaviour
     }
 
     public void Deselect(){
+        Debug.Log($"Deselecting {_name}"); 
         isSelected = false; 
         Unhighlight(); 
         HidePortrait(); 
@@ -113,10 +114,15 @@ public class Pawn : MonoBehaviour
     }
 
     public void Select(){
+        Debug.Log($"Selecting {_name}"); 
         if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
             Highlight(isSelected);
             _battleSystem.UnitSelected(gameObject); 
+        }
+        else if(!_battleSystem.UnitSelectable(gameObject)){
+            //turn has already been used
+            return; 
         }
         else{
             isSelected = true; 
@@ -235,6 +241,14 @@ public class Pawn : MonoBehaviour
 
     public Tile GetTile(){
         return _currentTile; 
+    }
+
+    public int EstimatedDamageTaken(int strength){
+        int damageTaken = strength - _defense;
+        if(damageTaken < 0){
+            damageTaken = 0; //we defended
+        }  
+        return damageTaken; 
     }
 
     public int TakeDamage(int damage){

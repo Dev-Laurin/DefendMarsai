@@ -82,6 +82,7 @@ public class BattleSystem : MonoBehaviour
 
     private void unitTurnEnd(GameObject unit){
         unitsUsed.Remove(unit); 
+        unit.GetComponent<Pawn>().Deselect(); 
         ResetVars(); 
     }
 
@@ -285,12 +286,16 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Player Turn"); 
     }
 
+    private int CalculateTargetPriority(Pawn target, Pawn attacker){
+        return target.EstimatedDamageTaken(attacker.GetStrength()); 
+    }
+
     private IEnumerator AttackPlayer(Pawn pawn){
         //find player pawns we can do 'good' damage to and list them in a priority queue 
         Debug.Log("Enemy Turn");
         PriorityQueue<GameObject> targets = new PriorityQueue<GameObject>(); 
         foreach(GameObject playerPawn in _playerPawns){
-            targets.Enqueue(playerPawn, pawn.GetComponent<Pawn>().CalculateTargetPriority(playerPawn.GetComponent<Pawn>())); 
+            targets.Enqueue(playerPawn, CalculateTargetPriority(playerPawn.GetComponent<Pawn>(), pawn.GetComponent<Pawn>())); 
         }
         
         Pawn pawnToAttack = targets.Dequeue().GetComponent<Pawn>();
@@ -373,6 +378,10 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    public bool UnitSelectable(GameObject unit){
+        return unitsUsed.ContainsKey(unit); 
+    }
+
     public void ShowAvailableMovement(GameObject pawn){
         _availableTiles = GetAvailableTilesFromGameObject(pawn);  
         HighlightAvailableTiles(_availableTiles); 
@@ -432,9 +441,11 @@ public class BattleSystem : MonoBehaviour
     
     private void EndPlayerTurn(){
         if(isPlayerTurn() && unitsUsed.Count < 1){
+            Debug.Log("Player turn has ended."); 
             resetUnitsUsed(); 
             StartCoroutine(EnemyTurn());
         }
+        Debug.Log("Player has not moved all units."); 
     }
 
     public IEnumerator AttackButtonPressed(){
@@ -446,7 +457,7 @@ public class BattleSystem : MonoBehaviour
             Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
             yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
             _uiManager.DisplayOptions(false); 
-            EndPlayerTurn(); 
+            unitTurnEnd(_selectedPawn); 
         }
     }
 
