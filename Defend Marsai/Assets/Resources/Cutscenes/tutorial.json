@@ -1,0 +1,53 @@
+{
+    "scene": "rollingHills",
+    "music": "mildlyIntenseSummer",    
+    "conversation": {
+        "messages": [
+            {
+                "name": "Henry", 
+                "message": "What are you doing here?!",
+                "sprite": "distressed"
+            },
+            {
+                "name": "Petunia",
+                "message": "I came to offer assistance what else?",
+                "sprite": "normal"
+            },
+            {
+                "name": "Henry",
+                "message": "The battlefield is no place for a princess!",
+                "sprite": "angry"
+            },
+            {
+                "name": "Petunia",
+                "message": "How can I ask others to fight if I am unwilling to? No I cannot ask for what I cannot give.",
+                "sprite": "determined"
+            },
+            {
+                "name": "Henry",
+                "message": "Ugh...you're going to get me killed trying to protect you and fight at the same time.",
+                "sprite": "ugh"
+            },
+            {
+                "name": "Petunia",
+                "message": "I'll have your back. You could use the help.",
+                "sprite": "normal"
+            },
+            {
+                "name": "Henry",
+                "message": "Just..don't get close to anyone. Ok?",
+                "sprite": "gaveUp"
+            },
+            {
+                "name": "Petunia",
+                "message": "I'll stay out of range.",
+                "sprite": "normal"
+            },
+            {
+                "name": "Henry",
+                "message": "She's going to be the death of me...",
+                "sprite": "deeplyDistressed"
+            }
+        ]
+    }
+}
