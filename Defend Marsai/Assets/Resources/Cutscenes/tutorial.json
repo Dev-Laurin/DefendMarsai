@@ -1,5 +1,5 @@
 {
-    "scene": "rollingHills",
+    "scene": "Woods/big_tree",
     "music": "mildlyIntenseSummer",    
     "conversation": {
         "messages": [
@@ -16,7 +16,7 @@
             {
                 "name": "Henry",
                 "message": "The battlefield is no place for a princess!",
-                "sprite": "angry"
+                "sprite": "distressed"
             },
             {
                 "name": "Petunia",
@@ -26,7 +26,7 @@
             {
                 "name": "Henry",
                 "message": "Ugh...you're going to get me killed trying to protect you and fight at the same time.",
-                "sprite": "ugh"
+                "sprite": "overwhelmed"
             },
             {
                 "name": "Petunia",
@@ -36,7 +36,7 @@
             {
                 "name": "Henry",
                 "message": "Just..don't get close to anyone. Ok?",
-                "sprite": "gaveUp"
+                "sprite": "distressed"
             },
             {
                 "name": "Petunia",
@@ -46,7 +46,7 @@
             {
                 "name": "Henry",
                 "message": "She's going to be the death of me...",
-                "sprite": "deeplyDistressed"
+                "sprite": "deeply_distressed"
             }
         ]
     }
