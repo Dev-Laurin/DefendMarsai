@@ -30,6 +30,13 @@ public class CutsceneManager : MonoBehaviour
         LoadCutscene("Cutscenes/tutorial"); 
     }
 
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0)){
+            NextText(); 
+        }
+    }
+
     public void LoadCutscene(string filename){
         _jsonReader.LoadJsonFile(filename); 
         _cutscene = _jsonReader.DeserializeCutscene(); 
