@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueManager : MonoBehaviour
+public class CutsceneManager : MonoBehaviour
 {
     [SerializeField] public GameObject leftPanel; 
     [SerializeField] public GameObject rightPanel; 
     [SerializeField] public GameObject leftPortrait; 
     [SerializeField] public GameObject rightPortrait;
     [SerializeField] public GameObject background; 
-    private JsonReader _jsonReader = new JsonReader(); 
+
+    [SerializeField] public AudioService _audioService;  
+    private JsonReader _jsonReader = new JsonReader();
+    
     private bool cutscenePlaying = false; 
     private int _index = 0; 
     private bool _left = true; 
@@ -30,6 +33,7 @@ public class DialogueManager : MonoBehaviour
 
         cutscenePlaying = true; 
         UpdateBackground(_cutscene.scene, background); 
+        StartCoroutine(_audioService.LoadAudio(_cutscene.music)); 
         StartCoroutine(ContinueCutscene()); 
     }
 
@@ -62,8 +66,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     private void UpdateBackground(string sprite, GameObject background){
-        Debug.Log("Updating Background"); 
-        Debug.Log(sprite); 
         background.GetComponent<Image>().overrideSprite = Resources.Load<Sprite>("Backgrounds/" + sprite); 
     }
 }
