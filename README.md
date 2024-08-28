@@ -10,6 +10,14 @@ A fireemblem like strategy game.
 more strategy by making you choose which battles on the main map (where to defend) and be responsible for villages' wellbeing. You'll
 also need enough supplies for your army (food, boots, weapons). 
 
+
+## Story 
+* follows the Henry and Petunia medeival story line. 
+The game starts as like a simple fire emblem game but when 
+Petunia gets saved the game shows the spirit battles alomg with 
+the physical gameplay. Petunia is awakened in the 
+spirit world by her body coming to life out of the grave. 
+
 ## Enemy Design
 ### Easy
 Start with 'Easy' AI where it chooses a unit randomly within range.
