@@ -43,6 +43,7 @@ public class Pawn : MonoBehaviour
     private CharacterController _controller; 
     private float _step; 
     private bool _move; 
+    private Queue<Tile> _lastPath; 
 
     public void Start(){
         _renderer = gameObject.GetComponent<Renderer>(); 
@@ -99,6 +100,7 @@ public class Pawn : MonoBehaviour
     }
 
     public IEnumerator MoveToTileViaPath(Queue<Tile> path){
+        _lastPath = new Queue<Tile>(path); 
         while(path.Count > 0){
             MoveToTile(_battleSystem.TileToGameObject(path.Dequeue())); 
             yield return new WaitForSeconds(1); 
@@ -130,6 +132,7 @@ public class Pawn : MonoBehaviour
             ShowAvailableMovement(); 
             ShowPortrait();
             UpdateUI(); 
+            _uiManager.ShowNoAttackActionsMenu(true); 
         }
         
     }
@@ -185,6 +188,10 @@ public class Pawn : MonoBehaviour
             Deselect();
             _battleSystem.PlayerFinishedUnit(gameObject);  
         }
+    }
+
+    public void MoveBackToTile(){
+        StartCoroutine(MoveToTileViaPath(_lastPath)); 
     }
 
     public int GetStrength(){

@@ -17,6 +17,9 @@ public class BattleSystem : MonoBehaviour
     //prefabs
     [SerializeField] private GameObject _tile;
     [SerializeField] private Transform _cam; 
+
+    [SerializeField] private List<GameObject> _startingPlayerPawns;
+    [SerializeField] private List<GameObject> _startingEnemyPawns; 
     [SerializeField] private GameObject _pawn; 
     [SerializeField] private GameObject _pawn2; 
     [SerializeField] private GameObject _enemy; 
@@ -32,6 +35,7 @@ public class BattleSystem : MonoBehaviour
     private GameObject _selectedPawn;
     private GameObject _selectedPawn2; 
     private List<Tile> _availableTiles;
+    private GameObject _previousTile; 
 
     //state
     private State _state; 
@@ -39,7 +43,7 @@ public class BattleSystem : MonoBehaviour
     private Dictionary<GameObject, int> unitsUsed = new Dictionary<GameObject, int>(); 
 
     //enemy
-    [SerializeField] private int _enemyCount = 1;
+    [SerializeField] private int _enemyCount = 2;
 
     //systems
     private GameManager _gameManager; 
@@ -81,6 +85,7 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void unitTurnEnd(GameObject unit){
+        Debug.Log("ending unit's turn"); 
         unitsUsed.Remove(unit); 
         unit.GetComponent<Pawn>().Deselect(); 
         ResetVars(); 
@@ -111,26 +116,28 @@ public class BattleSystem : MonoBehaviour
         
     }
 
-    private void InstantiatePawns(){
-        var tile1 = _map[1][1]; 
+    private void InstantiatePawn(int x, int y, GameObject pawn_){
+        var tile1 = _map[x][y]; 
         Debug.Log(tile1.transform.position); 
-        var pawn = MonoBehaviour.Instantiate(_pawn, new Vector3(tile1.transform.position.x, _tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
+        var pawn = MonoBehaviour.Instantiate(pawn_, new Vector3(tile1.transform.position.x, _tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
-        pawnScript.SetCurrentTile(tile1.GetComponent<Tile>()); 
+        pawnScript.SetCurrentTile(_map[x][y].GetComponent<Tile>()); 
         _playerPawns.Add(pawn);  
+    }
 
-        var pawn2 = MonoBehaviour.Instantiate(_pawn2, new Vector3(0, _tile.transform.position.y + 0.1f, 0), Quaternion.identity); 
-        var pawnScript2 = pawn2.GetComponent<Pawn>(); 
-        pawnScript2.Start(); 
-        pawnScript2.SetCurrentTile(_map[0][0].GetComponent<Tile>()); 
-        _playerPawns.Add(pawn2);  
+    private void InstantiatePawns(){
+        for(var i =0; i<_startingPlayerPawns.Count; i++){
+            InstantiatePawn(i, 0, _startingPlayerPawns[i]); 
+        }
     }
 
     private void InstantiateEnemies(){
         for(var i = 0; i<_enemyCount; i++){
+            
             var x = _map.Count - 1 - i; 
             var z = _map[x].Count - 1 - i; 
+            Debug.Log($"Creating enemy at {x} {z}"); 
             var enemy = MonoBehaviour.Instantiate(_enemy, new Vector3(x, _tile.transform.position.y + 0.1f, z), Quaternion.identity); 
             var enemyScript = enemy.GetComponent<Pawn>(); 
             enemyScript.Start(); 
@@ -138,14 +145,17 @@ public class BattleSystem : MonoBehaviour
             enemyScript.SetAsEnemy(true);
             _enemyPawns.Add(enemy); 
         }
-    }
 
+        // for(var i=0; i<_startingEnemyPawns.Count; i++){
+        //     InstantiatePawn(i, _height - 1, _startingEnemyPawns[i]); 
+        // }
+    }
     private void InstantiateCamera(){
         if(_cam.transform.rotation.x == 0.5){
             return; 
         }
-        _cam.transform.position = new Vector3((float)_width/2 -0.5f, 8, -2); 
-        _cam.transform.Rotate(60, 0, 0); 
+        _cam.transform.position = new Vector3((float)_width/2, 8, -2); 
+        _cam.transform.Rotate(65, 0, 0); 
     }
 
     private void GenerateMap(){
@@ -209,12 +219,13 @@ public class BattleSystem : MonoBehaviour
 
     //Player has selected a unit to perform an action on
     public void UnitSelected(GameObject pawn){
+        Debug.Log("pawn selected"); 
+        Debug.Log(pawn); 
         _selectedPawn2 = pawn; 
         _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
     }
 
     public void DisplayOptions(Pawn pawn, List<Pawn> interactablePawns){
-        var _uiManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetUIManager();
         _uiManager.UpdateOptionsMenu(pawn, interactablePawns[0]); 
     }
 
@@ -234,11 +245,15 @@ public class BattleSystem : MonoBehaviour
 
     private List<GameObject> findInteractableUnits(GameObject selectedPawn){
         List<GameObject> unitsInRange = new List<GameObject>(); 
-
         List<GameObject> allPawns = new List<GameObject>(); 
-        allPawns.AddRange(_playerPawns); 
-        allPawns.AddRange(_enemyPawns);  
 
+        if(selectedPawn.GetComponent<Pawn>().isEnemy()){
+            allPawns.AddRange(_playerPawns); 
+        }
+        else{
+            allPawns.AddRange(_enemyPawns); 
+        }
+        
         foreach(GameObject pawn in allPawns){
             if(pawn != selectedPawn && selectedPawn.GetComponent<Pawn>().UnitInRange(pawn.GetComponent<Pawn>())){
                 unitsInRange.Add(pawn); 
@@ -359,6 +374,7 @@ public class BattleSystem : MonoBehaviour
         }
         else{
             _playerPawns.Remove(pawn); 
+            unitTurnEnd(pawn); 
         }
         CheckEndState(); 
         Destroy(pawn);
@@ -410,6 +426,11 @@ public class BattleSystem : MonoBehaviour
         return false; 
     }
 
+    public void ItemsMenu(){
+        Debug.Log("Opened inventory"); 
+        _uiManager.ShowItemsMenu(); 
+    }
+
     public void TileSelected(GameObject tile){
         //see if a pawn is selected 
         if(_selectedPawn){
@@ -417,6 +438,7 @@ public class BattleSystem : MonoBehaviour
             var isEnemy = _selectedPawn.GetComponent<Pawn>().isEnemy(); 
             GameObject pawn = _selectedPawn; 
             if(!isEnemy){
+                _previousTile = tile; 
                 _selectedPawn.GetComponent<Pawn>().MoveToTile(tile); 
                 List<GameObject> interactableUnits = findInteractableUnits(pawn);
                 if(interactableUnits.Count > 0){
@@ -440,6 +462,7 @@ public class BattleSystem : MonoBehaviour
     }
     
     private void EndPlayerTurn(){
+        Debug.Log("Player's turn ended?"); 
         if(isPlayerTurn() && unitsUsed.Count < 1){
             Debug.Log("Player turn has ended."); 
             resetUnitsUsed(); 
@@ -449,6 +472,7 @@ public class BattleSystem : MonoBehaviour
     }
 
     public IEnumerator AttackButtonPressed(){
+        Debug.Log("Attack pressed"); 
         if(_state != State.PLAYER_TURN ){
             //accidental over-press, ignore
             yield break; 
@@ -458,16 +482,33 @@ public class BattleSystem : MonoBehaviour
             yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
             _uiManager.DisplayOptions(false); 
             unitTurnEnd(_selectedPawn); 
+            EndPlayerTurn(); 
         }
     }
 
     public void EndUnitTurnButtonPressed(){
         _uiManager.DisplayOptions(false); 
+        _uiManager.ShowNoAttackActionsMenu(false); 
+        unitTurnEnd(_selectedPawn); 
         EndPlayerTurn(); 
     }
 
     public void PlayerFinishedUnit(GameObject pawn){
+        Debug.Log("player finished unit"); 
+        _uiManager.ShowNoAttackActionsMenu(false); 
+        //unitTurnEnd(pawn); 
         EndPlayerTurn(); 
+    }
+
+    public void CancelAction(){
+        Debug.Log("Cancelling action"); 
+        Debug.Log(_selectedPawn.GetComponent<Pawn>().GetName()); 
+        _uiManager.DisplayOptions(false); 
+        Pawn pawn = _selectedPawn.GetComponent<Pawn>();
+        pawn.Deselect(); 
+        //_selectedPawn2.GetComponent<Pawn>().Deselect(); 
+        _playerChoosingOptions = false; 
+        pawn.MoveBackToTile(); 
     }
 
 }

@@ -13,7 +13,7 @@ public enum GameState{
 
 public class GameManager : MonoBehaviour
 {    
-
+    [SerializeField] public AudioService _audioService; 
     private UIManager _uiManager; 
     private BattleSystem _battleSystem; 
 
@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         _uiManager.StartBattleUI(); 
         _battleSystem = gameObject.GetComponent<BattleSystem>(); 
         _battleSystem.StartBattle();  
+        StartCoroutine(_audioService.LoadAudio("Gunpowder Tea - Mini Vandals.mp3")); 
     }    
 
     public UIManager GetUIManager(){
@@ -33,12 +34,21 @@ public class GameManager : MonoBehaviour
         return _battleSystem; 
     }
 
+    public void ItemsButtonPressed(){
+        _battleSystem.ItemsMenu(); 
+    }
+
     public void AttackButtonPressed(){
         StartCoroutine(_battleSystem.AttackButtonPressed()); 
     }
 
     public void EndUnitTurnButtonPressed(){
+        Debug.Log("EndUnitTurnButtonPressed"); 
         _battleSystem.EndUnitTurnButtonPressed(); 
+    }
+
+    public void CancelButtonPressed(){
+        _battleSystem.CancelAction(); 
     }
 
     public void ResetMatchButtonPressed(){

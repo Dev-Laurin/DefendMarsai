@@ -50,6 +50,7 @@ public class UIManager : MonoBehaviour
 
     //UI
     [SerializeField] private GameObject _menuPanel; 
+    [SerializeField] private GameObject _noAttackActionsMenu; 
 
     //vars 
     private TMPro.TextMeshProUGUI _turnText; 
@@ -97,10 +98,24 @@ public class UIManager : MonoBehaviour
         _actionTypeImage.SetActive(active); 
         _options.SetActive(active); 
         _actions.SetActive(active); 
+        ShowNoAttackActionsMenu(false); 
 
         UpdateOptionSliders(pawn, otherPawn); 
 
         _state = UIState.IN_MENU; 
+    }
+
+    public void ShowItemsMenu(){
+        Debug.Log("Show Items Menu"); 
+    }
+
+    public void ShowActionsMenu(){
+        _actions.SetActive(true); 
+    }
+
+    public void ShowNoAttackActionsMenu(bool active){
+        Debug.Log("Show no attack actions menu"); 
+        _noAttackActionsMenu.SetActive(active); 
     }
 
     private void UpdateOptionSliders(Pawn pawn, Pawn otherPawn){
@@ -128,6 +143,7 @@ public class UIManager : MonoBehaviour
             ShowPortrait(active); 
             DisplayOptions(active); 
             ShowEndBattleMenu(active); 
+            ShowNoAttackActionsMenu(active); 
         }
         catch{
             Debug.Log("UI elements disabled"); 
