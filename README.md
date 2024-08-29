@@ -16,7 +16,8 @@ however, each unit needs different levels of rest and has to switch at some poin
 * The player gets to choose which form of God they see (like skins) that the bible describes God as: The lion, eyes with flames, etc. I think also
 having a boy with gold eyes and white hair with any chooseable skin color would work as one of the forms as well.
 * Angels should not look like people, but the forms the bible describes.
-* Ideas to make the spirit battle different: use time in some way (you used this attack in the past, go back and undo it? or it effects future abilities). Make movement different, like warping instead of 1-2 direct movement. There's no death, but there's a cooldown period for units that are overwhelmed. 
+* Ideas to make the spirit battle different: use time in some way (you used this attack in the past, go back and undo it? or it effects future abilities). Make movement different, like warping instead of 1-2 direct movement. There's no death, but there's a cooldown period for units that are overwhelmed.
+* The music in the spirit world is epic: like 'Count 'Em by Brandon Lake'
 
 ## Story 
 * follows the Henry and Petunia medeival story line. 
