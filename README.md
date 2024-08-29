@@ -9,7 +9,9 @@ A fireemblem like strategy game.
 * I want to have something to do between battles. FE is fun, but it can be repetitive to do batte after battle. I'd like to add 
 more strategy by making you choose which battles on the main map (where to defend) and be responsible for villages' wellbeing. You'll
 also need enough supplies for your army (food, boots, weapons). 
-
+* in spirit battles it follows a defender, attacker, support class style where each unit can be whatever you choose 
+however, each unit needs different levels of rest and has to switch at some point. (defender can only take so many attacks then theyre exhausted) 
+* each character will be great at one class and weaker in the others. youll want to save their best abilities for certain times in battle 
 
 ## Story 
 * follows the Henry and Petunia medeival story line. 
