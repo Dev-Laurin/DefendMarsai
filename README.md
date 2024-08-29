@@ -11,7 +11,10 @@ more strategy by making you choose which battles on the main map (where to defen
 also need enough supplies for your army (food, boots, weapons). 
 * in spirit battles it follows a defender, attacker, support class style where each unit can be whatever you choose 
 however, each unit needs different levels of rest and has to switch at some point. (defender can only take so many attacks then theyre exhausted) 
-* each character will be great at one class and weaker in the others. youll want to save their best abilities for certain times in battle 
+* each character will be great at one class and weaker in the others. youll want to save their best abilities for certain times in battle
+* in the spirit world you play as God, where you command your units against the forces of darkness.
+* The player gets to choose which form of God they see (like skins) that the bible describes God as: The lion, eyes with flames, etc. I think also
+having a boy with gold eyes and white hair with any chooseable skin color would work as one of the forms as well.  
 
 ## Story 
 * follows the Henry and Petunia medeival story line. 
