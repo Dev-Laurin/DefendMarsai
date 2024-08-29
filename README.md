@@ -14,7 +14,8 @@ however, each unit needs different levels of rest and has to switch at some poin
 * each character will be great at one class and weaker in the others. youll want to save their best abilities for certain times in battle
 * in the spirit world you play as God, where you command your units against the forces of darkness.
 * The player gets to choose which form of God they see (like skins) that the bible describes God as: The lion, eyes with flames, etc. I think also
-having a boy with gold eyes and white hair with any chooseable skin color would work as one of the forms as well.  
+having a boy with gold eyes and white hair with any chooseable skin color would work as one of the forms as well.
+* Angels should not look like people, but the forms the bible describes. 
 
 ## Story 
 * follows the Henry and Petunia medeival story line. 
