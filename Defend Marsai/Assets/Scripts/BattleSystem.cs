@@ -87,7 +87,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void unitTurnEnd(GameObject unit){
-        Debug.Log("ending unit's turn"); 
         unitsUsed.Remove(unit); 
         unit.GetComponent<Pawn>().Deselect(); 
         ResetVars(); 
@@ -120,7 +119,6 @@ public class BattleSystem : MonoBehaviour
 
     private void InstantiatePawn(int x, int y, GameObject pawn_){
         var tile1 = _map[x][y]; 
-        Debug.Log(tile1.transform.position); 
         var pawn = MonoBehaviour.Instantiate(pawn_, new Vector3(tile1.transform.position.x, _tile.transform.position.y + 0.1f, tile1.transform.position.z), Quaternion.identity); 
         var pawnScript = pawn.GetComponent<Pawn>(); 
         pawnScript.Start(); 
@@ -140,7 +138,6 @@ public class BattleSystem : MonoBehaviour
             
             var x = _map.Count - 1 - i; 
             var z = _map[x].Count - 1 - i; 
-            Debug.Log($"Creating enemy at {x} {z}"); 
             var enemy = MonoBehaviour.Instantiate(_enemy, new Vector3(x, _tile.transform.position.y + 0.1f, z), Quaternion.identity); 
             var enemyScript = enemy.GetComponent<Pawn>(); 
             enemyScript.Start(); 
@@ -308,7 +305,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     private bool TileTaken(Tile tile){
-        Debug.Log("Tile is already used"); 
        return _mapPos[tile.GetXCoord()][tile.GetZCoord()]; 
     }
     private IEnumerator AttackPlayer(Pawn pawn){

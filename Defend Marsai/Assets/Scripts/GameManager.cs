@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         _uiManager.StartBattleUI(); 
         _battleSystem = gameObject.GetComponent<BattleSystem>(); 
         _battleSystem.StartBattle();  
-        StartCoroutine(_audioService.LoadAudio("Gunpowder Tea - Mini Vandals.mp3")); 
+        //StartCoroutine(_audioService.LoadAudio("Gunpowder Tea - Mini Vandals.mp3")); 
     }    
 
     public UIManager GetUIManager(){
