@@ -166,6 +166,11 @@ public class UIManager : MonoBehaviour
          
     }
 
+    public void CloseMenus(){
+        DisplayOptions(false); 
+        ShowNoAttackActionsMenu(false); 
+    }
+
     public void UpdateTurnText(string text){
         _turnText.text = text; 
     }

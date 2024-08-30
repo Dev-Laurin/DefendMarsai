@@ -115,7 +115,7 @@ public class Pawn : MonoBehaviour
         _battleSystem.DeselectedPawn(); 
     }
 
-    public void Select(){
+    public void Select(bool beingTargeted=false){
         Debug.Log($"Selecting {_name}"); 
         if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
@@ -124,9 +124,14 @@ public class Pawn : MonoBehaviour
         }
         else if(!_battleSystem.UnitSelectable(gameObject)){
             //turn has already been used
+            Debug.Log("turn has already been used, can't select"); 
             return; 
         }
+        else if(beingTargeted){
+            isSelected = true; 
+        }
         else{
+            Debug.Log("Should not be enemy turn, showing pawn ui"); 
             isSelected = true; 
             Highlight(isSelected);
             ShowAvailableMovement(); 
