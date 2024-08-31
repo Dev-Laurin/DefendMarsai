@@ -5020,6 +5020,112 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737672573}
   m_CullTransparentMesh: 1
+--- !u!1 &758991982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 758991986}
+  - component: {fileID: 758991985}
+  - component: {fileID: 758991984}
+  - component: {fileID: 758991983}
+  m_Layer: 0
+  m_Name: Plane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!64 &758991983
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758991982}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &758991984
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758991982}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d9b54ffe4971647d989fdeaed4cc74c8, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &758991985
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758991982}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &758991986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758991982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9, y: 0, z: 14}
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &762964518
 GameObject:
   m_ObjectHideFlags: 0
@@ -9998,12 +10104,12 @@ MonoBehaviour:
   _tile: {fileID: 7131768778672521535, guid: ccda9d25139884cd1aad97b9d0d84cd7, type: 3}
   _cam: {fileID: 330585546}
   _startingPlayerPawns:
-  - {fileID: 3170752887869082363, guid: b0dc13099c9154b3c92849cb24fcec40, type: 3}
-  - {fileID: 7878146187684419754, guid: b1aa473fdb4bf45898c0fb4d2fea6a2a, type: 3}
+  - {fileID: 2854761899138842113, guid: a9fa4e94ba7954550a982f9164ff518d, type: 3}
+  - {fileID: 3127290476700886651, guid: 26cdafb6d19cf4678acb3d3768b72060, type: 3}
   _startingEnemyPawns: []
-  _pawn: {fileID: 3170752887869082363, guid: b0dc13099c9154b3c92849cb24fcec40, type: 3}
-  _pawn2: {fileID: 7878146187684419754, guid: b1aa473fdb4bf45898c0fb4d2fea6a2a, type: 3}
-  _enemy: {fileID: 916316968987233905, guid: 75b574ec0518e4cf9881c2ca10a627f4, type: 3}
+  _pawn: {fileID: 2854761899138842113, guid: a9fa4e94ba7954550a982f9164ff518d, type: 3}
+  _pawn2: {fileID: 3127290476700886651, guid: 26cdafb6d19cf4678acb3d3768b72060, type: 3}
+  _enemy: {fileID: 4394670223706849688, guid: 643cc967f0bf64cec8f1da35720e2875, type: 3}
   _availableMat: {fileID: 2100000, guid: 928121b04cae9487f8e0b508f4104bf5, type: 2}
   _width: 10
   _height: 10
@@ -11595,3 +11701,4 @@ SceneRoots:
   - {fileID: 1150052899}
   - {fileID: 781656142}
   - {fileID: 1552508988}
+  - {fileID: 758991986}

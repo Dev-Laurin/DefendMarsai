@@ -155,7 +155,7 @@ public class BattleSystem : MonoBehaviour
         if(_cam.transform.rotation.x == 0.5){
             return; 
         }
-        _cam.transform.position = new Vector3((float)_width/2, 8, -2); 
+        _cam.transform.position = new Vector3((float)(_width/2 - 0.5), 9f, -0.5f); 
         _cam.transform.Rotate(65, 0, 0); 
     }
 
