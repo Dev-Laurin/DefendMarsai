@@ -10104,13 +10104,15 @@ MonoBehaviour:
   _tile: {fileID: 7131768778672521535, guid: ccda9d25139884cd1aad97b9d0d84cd7, type: 3}
   _cam: {fileID: 330585546}
   _startingPlayerPawns:
-  - {fileID: 2854761899138842113, guid: a9fa4e94ba7954550a982f9164ff518d, type: 3}
-  - {fileID: 3127290476700886651, guid: 26cdafb6d19cf4678acb3d3768b72060, type: 3}
+  - {fileID: 2537416620299678424, guid: 4855ce6b7fe224adcb60f968f2111e92, type: 3}
+  - {fileID: 2167913949849836028, guid: 1ee31f2c88eab476f95ad81bc2a4f4ae, type: 3}
   _startingEnemyPawns: []
-  _pawn: {fileID: 2854761899138842113, guid: a9fa4e94ba7954550a982f9164ff518d, type: 3}
-  _pawn2: {fileID: 3127290476700886651, guid: 26cdafb6d19cf4678acb3d3768b72060, type: 3}
-  _enemy: {fileID: 4394670223706849688, guid: 643cc967f0bf64cec8f1da35720e2875, type: 3}
+  _pawn: {fileID: 2537416620299678424, guid: 4855ce6b7fe224adcb60f968f2111e92, type: 3}
+  _pawn2: {fileID: 2167913949849836028, guid: 1ee31f2c88eab476f95ad81bc2a4f4ae, type: 3}
+  _enemy: {fileID: 2945399548046829663, guid: 118e22f5dd9e94a178bc99e2faf9b8f7, type: 3}
   _availableMat: {fileID: 2100000, guid: 928121b04cae9487f8e0b508f4104bf5, type: 2}
+  _cursorPrefab: {fileID: 2328741726348444037, guid: 4ab03cc4226d3443883ec15e223e09f6,
+    type: 3}
   _width: 10
   _height: 10
   _enemyCount: 3

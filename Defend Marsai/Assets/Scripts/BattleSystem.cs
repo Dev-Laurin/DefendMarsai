@@ -24,6 +24,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private GameObject _pawn2; 
     [SerializeField] private GameObject _enemy; 
     [SerializeField] private Material _availableMat; 
+    [SerializeField] private GameObject _cursorPrefab; 
 
     //map
     [SerializeField] private int _width = 10, _height = 10; 
@@ -37,6 +38,9 @@ public class BattleSystem : MonoBehaviour
     private GameObject _selectedPawn2; 
     private List<Tile> _availableTiles;
     private GameObject _previousTile; 
+
+    //cursor 
+    private GameObject _cursor; 
 
     //state
     private State _state; 
@@ -72,7 +76,8 @@ public class BattleSystem : MonoBehaviour
             InstantiateCamera(); 
             InstantiatePawns(); 
             InstantiateEnemies(); 
-            resetUnitsUsed(); 
+            resetUnitsUsed();
+            InstantiateCursor();  
             PlayerTurn();  
         }
         catch{
@@ -155,8 +160,13 @@ public class BattleSystem : MonoBehaviour
         if(_cam.transform.rotation.x == 0.5){
             return; 
         }
-        _cam.transform.position = new Vector3((float)(_width/2 - 0.5), 9f, -0.5f); 
+        _cam.transform.position = new Vector3((float)(_width/2 - 0.5), 10f, -2f); 
         _cam.transform.Rotate(65, 0, 0); 
+    }
+
+    private void InstantiateCursor(){
+        Vector3 pos = _map[0][0].transform.position; 
+        _cursor = MonoBehaviour.Instantiate(_cursorPrefab, new Vector3(pos.x, (float)(pos.y + 0.05), pos.z), Quaternion.identity); 
     }
 
     private void GenerateMap(){
