@@ -80,7 +80,9 @@ public class Tile : MonoBehaviour
 
     void OnMouseEnter(){
         if(_uiManager.IsPlayState()){
+            //_battleSystem.UpdateCursor(gameObject.transform.position); 
             ChangeTilesMat(_highlightMat, 0); 
+            _battleSystem.HoveringOverTile(); 
         }
     }
     

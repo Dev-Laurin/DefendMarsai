@@ -25,6 +25,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private GameObject _enemy; 
     [SerializeField] private Material _availableMat; 
     [SerializeField] private GameObject _cursorPrefab; 
+    [SerializeField] private GameObject _selectedPrefab; 
+    [SerializeField] private GameObject _selected2Prefab;
+    
 
     //map
     [SerializeField] private int _width = 10, _height = 10; 
@@ -41,6 +44,8 @@ public class BattleSystem : MonoBehaviour
 
     //cursor 
     private GameObject _cursor; 
+    private GameObject _selected; 
+    private GameObject _selected2;
 
     //state
     private State _state; 
@@ -167,6 +172,15 @@ public class BattleSystem : MonoBehaviour
     private void InstantiateCursor(){
         Vector3 pos = _map[0][0].transform.position; 
         _cursor = MonoBehaviour.Instantiate(_cursorPrefab, new Vector3(pos.x, (float)(pos.y + 0.05), pos.z), Quaternion.identity); 
+        _selected = MonoBehaviour.Instantiate(_selectedPrefab, new Vector3(pos.x, (float)(pos.y + 0.05), pos.z), Quaternion.identity); 
+        _selected.SetActive(false); 
+        _selected2 = MonoBehaviour.Instantiate(_selected2Prefab, new Vector3(pos.x, (float)(pos.y + 0.05), pos.z), Quaternion.identity); 
+        _selected2.SetActive(false); 
+    }
+
+    public void UpdateCursor(Vector3 position){
+        _cursor.SetActive(true); 
+        _cursor.transform.position = new Vector3(position.x, (float)(position.y + 0.05), position.z); 
     }
 
     private void GenerateMap(){
@@ -227,8 +241,33 @@ public class BattleSystem : MonoBehaviour
 
     //Player has selected a unit to perform an action on
     public void UnitSelected(GameObject pawn){
+        Debug.Log("selecting enemy unit"); 
+        GameObject tile = TileToGameObject(pawn.GetComponent<Pawn>().GetTile()); 
+        _selected2.transform.position = new Vector3(tile.transform.position.x, (float)(tile.transform.position.y + 0.05), tile.transform.position.z); 
+        _selected2.SetActive(true); 
         _selectedPawn2 = pawn; 
         _uiManager.UpdateOptionsMenu(_selectedPawn.GetComponent<Pawn>(), _selectedPawn2.GetComponent<Pawn>()); 
+        _cursor.SetActive(false); 
+    }
+    
+    public void UpdateCamera(Vector3 position){
+        //_cam.transform.position = new Vector3(position.x, position.y + 10f, position.z - 2f); 
+        //_cam.transform.Rotate(65, 0, 0); 
+    }
+    public void PlayerUnitSelected(Vector3 position){
+        Debug.Log("player unit selected"); 
+        Debug.Log(position); 
+        _selected.SetActive(true); 
+        _selected.transform.position = new Vector3(position.x, (float)(position.y + 0.05), position.z); 
+    }
+
+    public void SetSelectedObjActive(bool active){
+        _selected.SetActive(active); 
+        _cursor.SetActive(active); 
+    }
+
+    public void HoveringOverTile(){
+        _cursor.SetActive(false); 
     }
 
     public void DisplayOptions(Pawn pawn, List<Pawn> interactablePawns){
@@ -284,6 +323,7 @@ public class BattleSystem : MonoBehaviour
         }
         _playerChoosingOptions = false; 
         _uiManager.CloseMenus(); 
+        _selected2.SetActive(false); 
     }
 
     private IEnumerator EnemyTurn(){
@@ -448,6 +488,7 @@ public class BattleSystem : MonoBehaviour
     public void TileSelected(GameObject tile){
         //see if a pawn is selected 
         if(_selectedPawn){
+            _selected.SetActive(false); 
             //if tile is selectable when a pawn is selected, move the pawn there
             var isEnemy = _selectedPawn.GetComponent<Pawn>().isEnemy(); 
             GameObject pawn = _selectedPawn; 

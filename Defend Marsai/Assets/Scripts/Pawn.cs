@@ -84,15 +84,17 @@ public class Pawn : MonoBehaviour
 
     void OnMouseEnter(){
         if(!isSelected && _battleSystem.isSelectable() && _uiManager.IsPlayState()){
-            Highlight(); 
+            //Highlight();
+            _battleSystem.UpdateCursor(_battleSystem.TileToGameObject(_currentTile).transform.position);  
+            
         }
     }
     
-    void OnMouseExit(){
-        if(!isSelected && _battleSystem.isSelectable() && _uiManager.IsPlayState()){
-            Unhighlight(); 
-        }
-    }
+    // void OnMouseExit(){
+    //     if(!isSelected && _battleSystem.isSelectable() && _uiManager.IsPlayState()){
+    //         //Unhighlight(); 
+    //     }
+    // }
 
     public bool UnitInRange(Pawn unit){
         var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
@@ -119,7 +121,7 @@ public class Pawn : MonoBehaviour
         Debug.Log($"Selecting {_name}"); 
         if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
-            Highlight(isSelected);
+            //Highlight(isSelected);
             _battleSystem.UnitSelected(gameObject); 
         }
         else if(!_battleSystem.UnitSelectable(gameObject)){
@@ -133,11 +135,13 @@ public class Pawn : MonoBehaviour
         else{
             Debug.Log("Should not be enemy turn, showing pawn ui"); 
             isSelected = true; 
-            Highlight(isSelected);
+            //Highlight(isSelected);
+            _battleSystem.PlayerUnitSelected(_battleSystem.TileToGameObject(_currentTile).transform.position); 
             ShowAvailableMovement(); 
             ShowPortrait();
             UpdateUI(); 
             _uiManager.ShowNoAttackActionsMenu(true); 
+            _battleSystem.UpdateCamera(_battleSystem.TileToGameObject(_currentTile).transform.position); 
         }
         
     }
