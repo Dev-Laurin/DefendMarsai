@@ -7,8 +7,7 @@ using UnityEngine.TestTools;
 public class PathFindingTests
 {
     private List<List<GameObject>> _map; 
-    private List<Tile> FindNeighborsFunc(Tile tile){
-        Debug.Log($"Finding neighbors for tile: {tile}"); 
+    private List<Tile> FindNeighborsFunc(Tile tile, Tile goal = null){
         List<Tile> neighbors = new List<Tile>(); 
         int x = tile.GetXCoord(); 
         int z = tile.GetZCoord(); 

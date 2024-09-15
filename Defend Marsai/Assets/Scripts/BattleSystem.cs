@@ -215,7 +215,7 @@ public class BattleSystem : MonoBehaviour
         return _map[tile.GetXCoord()][tile.GetZCoord()]; 
     }
 
-    public List<Tile> FindNeighbors(Tile tile){
+    public List<Tile> FindNeighbors(Tile tile, Tile goal = null){
         List<Tile> neighbors = new List<Tile>(); 
         int x = tile.GetXCoord(); 
         int z = tile.GetZCoord(); 
@@ -225,23 +225,50 @@ public class BattleSystem : MonoBehaviour
         int down = z - 1; 
 
         if(right < _map.Count){
-            neighbors.Add(_map[right][z].GetComponent<Tile>());
+            Tile neighborTile = _map[right][z].GetComponent<Tile>(); 
+            if(neighborTile != goal && TileTaken(neighborTile)){
+                neighborTile.SetCost(100); 
+            }
+            else{
+                neighborTile.resetCost(); 
+            }
+            neighbors.Add(neighborTile);
         }
         if(left >= 0){
-            neighbors.Add(_map[left][z].GetComponent<Tile>()); 
+            Tile neighborTile = _map[left][z].GetComponent<Tile>(); 
+            if(neighborTile != goal &&TileTaken(neighborTile)){
+                neighborTile.SetCost(100); 
+            }
+            else{
+                neighborTile.resetCost(); 
+            }
+            neighbors.Add(neighborTile); 
         }
         if(up < _map[x].Count){
-            neighbors.Add(_map[x][up].GetComponent<Tile>()); 
+            Tile neighborTile = _map[x][up].GetComponent<Tile>(); 
+            if(neighborTile != goal &&TileTaken(neighborTile)){
+                neighborTile.SetCost(100); 
+            }
+            else{
+                neighborTile.resetCost(); 
+            }
+            neighbors.Add(neighborTile); 
         }
         if(down >= 0){
-            neighbors.Add(_map[x][down].GetComponent<Tile>());
+            Tile neighborTile = _map[x][down].GetComponent<Tile>(); 
+            if(neighborTile != goal &&TileTaken(neighborTile)){
+                neighborTile.SetCost(100); 
+            }
+            else{
+                neighborTile.resetCost(); 
+            }
+            neighbors.Add(neighborTile);
         }
         return neighbors; 
     }
 
     //Player has selected a unit to perform an action on
     public void UnitSelected(GameObject pawn){
-        Debug.Log("selecting enemy unit"); 
         GameObject tile = TileToGameObject(pawn.GetComponent<Pawn>().GetTile()); 
         _selected2.transform.position = new Vector3(tile.transform.position.x, (float)(tile.transform.position.y + 0.05), tile.transform.position.z); 
         _selected2.SetActive(true); 
@@ -255,8 +282,6 @@ public class BattleSystem : MonoBehaviour
         //_cam.transform.Rotate(65, 0, 0); 
     }
     public void PlayerUnitSelected(Vector3 position){
-        Debug.Log("player unit selected"); 
-        Debug.Log(position); 
         _selected.SetActive(true); 
         _selected.transform.position = new Vector3(position.x, (float)(position.y + 0.05), position.z); 
     }
@@ -354,24 +379,52 @@ public class BattleSystem : MonoBehaviour
         return target.EstimatedDamageTaken(attacker.GetStrength()); 
     }
 
+    private PriorityQueue<GameObject> CalculateTargets(Pawn attacker){
+        //Get possible targets
+        PriorityQueue<GameObject> possibleTargets = new PriorityQueue<GameObject>(); 
+        PriorityQueue<GameObject> possibleTargetsUnChanged = new PriorityQueue<GameObject>(); 
+        foreach(GameObject playerPawn in _playerPawns){
+            possibleTargets.Enqueue(playerPawn, CalculateTargetPriority(playerPawn.GetComponent<Pawn>(), attacker.GetComponent<Pawn>())); 
+            possibleTargetsUnChanged.Enqueue(playerPawn, CalculateTargetPriority(playerPawn.GetComponent<Pawn>(), attacker.GetComponent<Pawn>())); 
+        }
+
+        //Calculate distance between each target, only add targets that are reachable
+        PriorityQueue<GameObject> targets = new PriorityQueue<GameObject>(); 
+        while(possibleTargets.Count > 0){
+            GameObject targetGameObject = possibleTargets.Dequeue(); 
+            Pawn target = targetGameObject.GetComponent<Pawn>();
+            Tile targetTile = target.GetTile(); 
+            Queue<Tile> path = PathFinding.DijkstraWithGoal(attacker.GetComponent<Pawn>().GetTile(), targetTile, attacker.GetComponent<Pawn>().GetMovement(), FindNeighbors);
+
+            if(path == null){
+                continue; 
+            }
+            if((path.Count - 1) <= attacker.GetMovement()) {
+                //we can reach this unit
+                targets.Enqueue(targetGameObject, CalculateTargetPriority(target.GetComponent<Pawn>(), attacker.GetComponent<Pawn>())); 
+            }
+        }
+
+        if(targets.Count < 1){
+            return possibleTargetsUnChanged; 
+        }
+
+        return targets; 
+    }
+
     private bool TileTaken(Tile tile){
        return _mapPos[tile.GetXCoord()][tile.GetZCoord()]; 
     }
     private IEnumerator AttackPlayer(Pawn pawn){
         //find player pawns we can do 'good' damage to and list them in a priority queue 
         Debug.Log("Enemy Turn");
-        PriorityQueue<GameObject> targets = new PriorityQueue<GameObject>(); 
-        foreach(GameObject playerPawn in _playerPawns){
-            targets.Enqueue(playerPawn, CalculateTargetPriority(playerPawn.GetComponent<Pawn>(), pawn.GetComponent<Pawn>())); 
-        }
+        PriorityQueue<GameObject> targets = CalculateTargets(pawn); 
         
         Pawn pawnToAttack = targets.Dequeue().GetComponent<Pawn>();
         Tile pawnToAttackTile = pawnToAttack.GetTile(); 
         Queue<Tile> path = PathFinding.DijkstraWithGoal(pawn.GetComponent<Pawn>().GetTile(), pawnToAttackTile, pawn.GetComponent<Pawn>().GetMovement(), FindNeighbors);
 
-        int pathCount = 0; 
         if(path != null){
-            pathCount = path.Count; 
             int availableMovement = pawn.GetMovement(); 
             while(availableMovement > 0 && path.Count > 0){
                 Tile tile = path.Dequeue(); 
@@ -400,9 +453,7 @@ public class BattleSystem : MonoBehaviour
 
         if(pawn.UnitInRange(pawnToAttack)){
             //we can attack the unit
-            if(pawnToAttack){
-                int damage = pawnToAttack.TakeDamage(pawn.GetStrength()); 
-            }
+            int damage = pawnToAttack.TakeDamage(pawn.GetStrength()); 
         }
 
         pawn.IncreaseFatigue(1); 
@@ -532,11 +583,9 @@ public class BattleSystem : MonoBehaviour
     
     private void EndPlayerTurn(){
         if(isPlayerTurn() && unitsUsed.Count < 1){
-            Debug.Log("Player turn has ended."); 
             resetUnitsUsed(); 
             StartCoroutine(EnemyTurn());
         }
-        Debug.Log("Player has not moved all units."); 
     }
 
     public IEnumerator AttackButtonPressed(){
@@ -566,8 +615,6 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void CancelAction(){
-        Debug.Log("Cancelling action"); 
-        Debug.Log(_selectedPawn.GetComponent<Pawn>().GetName()); 
         _uiManager.DisplayOptions(false); 
         Pawn pawn = _selectedPawn.GetComponent<Pawn>();
         pawn.Deselect(); 

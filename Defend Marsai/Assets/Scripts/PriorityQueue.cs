@@ -4,6 +4,14 @@ using System;
 
 public class PriorityQueue<T>
 {
+    // public PriorityQueue<T>(PriorityQueue<T> path){
+    //     int priority = path.Count; 
+    //     while(path.Count > 0){
+    //         T item = path.Dequeue(); 
+    //         this.Enqueue(item, priority);
+    //         priority = priority - 1;  
+    //     }
+    // }
     private List<Tuple<T, int>> elements = new List<Tuple<T, int>>(); 
 
     public int Count{

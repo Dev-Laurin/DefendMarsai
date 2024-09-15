@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: Enemy
-  _movement: 3
+  _movement: 6
   _strength: 1
   _speed: 5
   _defense: 0

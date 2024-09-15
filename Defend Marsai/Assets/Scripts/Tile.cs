@@ -24,6 +24,7 @@ public class Tile : MonoBehaviour
     private int _zcoord; 
     private bool _selectable = false; 
     [SerializeField] private Material _highlightMat; 
+    private int _cost = 0; 
 
     void Start(){
         try{
@@ -38,6 +39,7 @@ public class Tile : MonoBehaviour
         _oldMatIndex = 0; 
         _oldMat = gameObject.GetComponent<Renderer>().materials[0];
         _originalMat = gameObject.GetComponent<Renderer>().materials[0];
+        _cost = (int)_type; 
     }
 
     public void HighlightTile(Color color){
@@ -99,8 +101,15 @@ public class Tile : MonoBehaviour
         } 
     }
 
+    public void SetCost(int cost){
+        _cost = cost; 
+    }
     public int GetCost(){
-        return (int)_type; 
+        return _cost; 
+    }
+
+    public void resetCost(){
+        _cost = (int)_type;
     }
 
     public void SetXCoord(int x){

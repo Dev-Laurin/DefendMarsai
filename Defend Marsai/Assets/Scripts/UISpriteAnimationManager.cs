@@ -19,13 +19,11 @@ public class UISpriteAnimationManager : MonoBehaviour
     private Image _image; 
 
     public void PlayerStopAnimation(){
-        Debug.Log($"Stopping animation: {_spriteAnimation}"); 
         _isDone = true; 
         StopCoroutine(PlayAnimation());  
     }
 
     public void PlayerStartAnimation(SpriteAnimation spriteAnim){
-        Debug.Log($"Playing animation: {spriteAnim}"); 
         if(spriteAnim){
             _spriteAnimation = spriteAnim; 
             _secondsBetSprites = _spriteAnimation.GetSecondsBetSprites(); 

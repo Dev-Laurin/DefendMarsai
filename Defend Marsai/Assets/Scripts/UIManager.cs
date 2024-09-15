@@ -114,7 +114,6 @@ public class UIManager : MonoBehaviour
     }
 
     public void ShowNoAttackActionsMenu(bool active){
-        Debug.Log("Show no attack actions menu"); 
         _noAttackActionsMenu.SetActive(active); 
     }
 
@@ -156,14 +155,6 @@ public class UIManager : MonoBehaviour
         _options.SetActive(show); 
         _actions.SetActive(show); 
         _actionTypeImage.SetActive(show); 
-
-        if(show){
-            _state = UIState.IN_MENU;
-        }
-        else{
-            _state = UIState.PLAY; 
-        }
-         
     }
 
     public void CloseMenus(){

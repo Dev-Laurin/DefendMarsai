@@ -96,7 +96,7 @@ public class Pawn : MonoBehaviour
     //     }
     // }
 
-    public bool UnitInRange(Pawn unit){
+    public bool UnitInRange(Pawn unit){        
         var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
         return path.Count <= _range; 
     }
@@ -110,7 +110,6 @@ public class Pawn : MonoBehaviour
     }
 
     public void Deselect(){
-        Debug.Log($"Deselecting {_name}"); 
         isSelected = false; 
         Unhighlight(); 
         HidePortrait(); 
@@ -118,7 +117,6 @@ public class Pawn : MonoBehaviour
     }
 
     public void Select(bool beingTargeted=false){
-        Debug.Log($"Selecting {_name}"); 
         if(_isEnemy && _battleSystem.InRange(gameObject)){
             isSelected = true; 
             //Highlight(isSelected);
@@ -126,14 +124,12 @@ public class Pawn : MonoBehaviour
         }
         else if(!_battleSystem.UnitSelectable(gameObject)){
             //turn has already been used
-            Debug.Log("turn has already been used, can't select"); 
             return; 
         }
         else if(beingTargeted){
             isSelected = true; 
         }
         else{
-            Debug.Log("Should not be enemy turn, showing pawn ui"); 
             isSelected = true; 
             //Highlight(isSelected);
             _battleSystem.PlayerUnitSelected(_battleSystem.TileToGameObject(_currentTile).transform.position); 

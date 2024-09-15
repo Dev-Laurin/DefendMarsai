@@ -1,0 +1,34 @@
+{
+    "name": "PlayerInput",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "203477ae-ba99-4ef0-a220-0de3c34f2af8",
+            "actions": [
+                {
+                    "name": "CameraDrag",
+                    "type": "Button",
+                    "id": "41df6b22-77b4-4a9b-84a7-fc84ba2a13e8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "531545d8-c667-4ac1-9df3-f7f8650b54da",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

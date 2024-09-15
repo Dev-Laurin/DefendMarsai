@@ -5,7 +5,7 @@ using UnityEngine;
 public static class PathFinding
 {
 
-    public delegate List<Tile> FindNeighborsFunction(Tile tile);
+    public delegate List<Tile> FindNeighborsFunction(Tile tile, Tile goal = null);
 
     public static List<Tile> DijkstraAvailableTiles(Tile start, int movement, FindNeighborsFunction FindNeighbors){
         if(movement <= 0){
@@ -52,7 +52,7 @@ public static class PathFinding
         while(_priorityQueue.Count > 0){
             Tile currentTile = _priorityQueue.Dequeue(); 
 
-            foreach(Tile neighbor in FindNeighbors(currentTile)){
+            foreach(Tile neighbor in FindNeighbors(currentTile, goal)){
                  
                 int newCost = _costToReachTile[currentTile] + neighbor.GetCost(); 
 

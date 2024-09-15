@@ -28,19 +28,15 @@ public class PlayUISpriteAnimation : MonoBehaviour
     }
 
     private IEnumerator PlayAnimation(){
-        Debug.Log("Started playing animation"); 
         int secondsIndex = _index - 1; 
         if(secondsIndex <= 0){
             secondsIndex = 0; 
         }
-        Debug.Log("Before wait for seconds"); 
         yield return new WaitForSeconds(_secondsBetSprites[secondsIndex]); 
 
-        Debug.Log("After wait for seconds"); 
         if(_index >= _sprites.Count){
             _index = 0; 
         }
-        Debug.Log("Before image override"); 
 
         _image.overrideSprite = _sprites[_index]; 
         _image.SetMaterialDirty(); 

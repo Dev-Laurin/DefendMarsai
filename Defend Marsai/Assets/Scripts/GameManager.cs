@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
     }
 
     public void EndUnitTurnButtonPressed(){
-        Debug.Log("EndUnitTurnButtonPressed"); 
         _battleSystem.EndUnitTurnButtonPressed(); 
     }
 
@@ -52,6 +51,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void ResetMatchButtonPressed(){
+        Debug.Log("Reset Match Button Pressed"); 
         _uiManager.StartBattleUI(); 
         _battleSystem.RestartBattle(); 
     }
