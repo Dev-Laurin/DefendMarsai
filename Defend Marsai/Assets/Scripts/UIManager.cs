@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _turnTextUI; 
     [SerializeField] private GameObject _options; 
     [SerializeField] private GameObject _actions;
+    [SerializeField] private GameObject _hpTop; 
+    [SerializeField] private GameObject _hpBottom; 
 
     //Battle Options UI
     //unit 1 
@@ -69,6 +71,8 @@ public class UIManager : MonoBehaviour
         _portraitImage.GetComponent<Image>().overrideSprite = pawn.GetPortrait(); 
         _portraitImage.GetComponent<UISpriteAnimationManager>().PlayerStartAnimation(pawn.GetPortraitAnimation()); 
         _classImage.GetComponent<Image>().overrideSprite = pawn.GetClassImage(); 
+        _hpTop.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetHP().ToString(); 
+        _hpBottom.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetMaxHP().ToString(); 
     }
 
     public void UpdateOptionsMenu(Pawn pawn, Pawn otherPawn){
