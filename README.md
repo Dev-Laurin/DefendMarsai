@@ -2,7 +2,18 @@
 A fireemblem like strategy game. 
 
 ## Photo Timeline 
-<img src="https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?raw=true"/>
+
+<p float="left">
+  <img src="https://www.dropbox.com/scl/fi/szd6jd4jzsbgs5hju91yk/Screenshot-2024-05-24-at-11.23.19-AM.png?rlkey=yp5yzbtas2psazrnsuu2q7gnz&st=spvgjkfa&raw=true" />
+  <caption align="center">May 24, 2024</caption>
+  <img src="https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?rlkey=s9l6lcapadwmoyusagqdyxc25&st=us140yeo&raw=true" />
+  <caption>Current</caption>
+</p>
+
+Project Start | May 24, 2024 | Current 
+:------------:|:|------------:|:------------:
+Starting image | <img src="https://www.dropbox.com/scl/fi/szd6jd4jzsbgs5hju91yk/Screenshot-2024-05-24-at-11.23.19-AM.png?rlkey=yp5yzbtas2psazrnsuu2q7gnz&st=spvgjkfa&raw=true" /> |  <img src="https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?rlkey=s9l6lcapadwmoyusagqdyxc25&st=us140yeo&raw=true" />
+
 
 ## Design 
 * Units will have fatigue. Each battle or action (not movement) will increase their fatigue. Support classes can reduce this for other units. 
