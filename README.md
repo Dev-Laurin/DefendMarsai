@@ -1,6 +1,9 @@
 # Defend Marsai
 A fireemblem like strategy game. 
 
+## Photo Timeline 
+<img src="https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?raw=true"/>
+
 ## Design 
 * Units will have fatigue. Each battle or action (not movement) will increase their fatigue. Support classes can reduce this for other units. 
 * Weapons will have durability and classes. 
