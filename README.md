@@ -4,7 +4,7 @@ A fireemblem like strategy game.
 ## Photo Timeline 
 May 24, 2024 | to | Current 
 :------------:|:------------:|:------------:
-![May242024](https://www.dropbox.com/scl/fi/szd6jd4jzsbgs5hju91yk/Screenshot-2024-05-24-at-11.23.19-AM.png?rlkey=yp5yzbtas2psazrnsuu2q7gnz&st=spvgjkfa&raw=true) | > |  ![Current](https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?rlkey=s9l6lcapadwmoyusagqdyxc25&st=us140yeo&raw=true)
+![May242024](https://www.dropbox.com/scl/fi/szd6jd4jzsbgs5hju91yk/Screenshot-2024-05-24-at-11.23.19-AM.png?rlkey=yp5yzbtas2psazrnsuu2q7gnz&st=spvgjkfa&raw=true) | > |  ![Current](https://www.dropbox.com/scl/fi/1obllbo42ag0zwyb3pg9e/Screenshot-2024-09-15-at-8.17.12-AM.png?rlkey=s9l6lcapadwmoyusagqdyxc25&st=p3csktwy&raw=true)
 
 
 ## Design 
