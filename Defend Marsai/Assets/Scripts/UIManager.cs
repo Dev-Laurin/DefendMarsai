@@ -39,6 +39,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _unit1WillUI; 
     [SerializeField] private GameObject _unit1ClassUI; 
     [SerializeField] private GameObject _actionTypeImage; 
+    [SerializeField] private GameObject _unit1CurrentHP; 
+    [SerializeField] private GameObject _unit1MaxHP; 
 
     //unit 2
     [SerializeField] private GameObject _unit2Image; 
@@ -49,6 +51,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _unit2SpeedUI; 
     [SerializeField] private GameObject _unit2WillUI; 
     [SerializeField] private GameObject _unit2ClassUI; 
+    [SerializeField] private GameObject _unit2CurrentHP; 
+    [SerializeField] private GameObject _unit2MaxHP; 
 
     //UI
     [SerializeField] private GameObject _menuPanel; 
@@ -86,6 +90,8 @@ public class UIManager : MonoBehaviour
         _unit1SpeedUI.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetSpeed().ToString();
         _unit1WillUI.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetWill().ToString(); 
         _unit1Image.GetComponent<Image>().overrideSprite = pawn.GetPortrait(); 
+        _unit1CurrentHP.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetHP().ToString(); 
+        _unit1MaxHP.GetComponent<TMPro.TextMeshProUGUI>().text = pawn.GetMaxHP().ToString(); 
 
         _unit2HPSliderUI.GetComponent<Slider>().value = otherPawn.GetHP();
         _unit2HPSliderUI.GetComponent<Slider>().maxValue = otherPawn.GetMaxHP();
@@ -97,6 +103,8 @@ public class UIManager : MonoBehaviour
         _unit2SpeedUI.GetComponent<TMPro.TextMeshProUGUI>().text = otherPawn.GetSpeed().ToString();
         _unit2WillUI.GetComponent<TMPro.TextMeshProUGUI>().text = otherPawn.GetWill().ToString();
         _unit2Image.GetComponent<Image>().overrideSprite = otherPawn.GetPortrait(); 
+        _unit2CurrentHP.GetComponent<TMPro.TextMeshProUGUI>().text = otherPawn.GetHP().ToString(); 
+        _unit2MaxHP.GetComponent<TMPro.TextMeshProUGUI>().text = otherPawn.GetMaxHP().ToString(); 
 
         bool active = true; 
         _actionTypeImage.SetActive(active); 
@@ -172,6 +180,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowPortrait(bool show){
         _portraitPanel.SetActive(show); 
+        _noAttackActionsMenu.SetActive(show); 
         if(!show){
             _portraitImage.GetComponent<UISpriteAnimationManager>().StopAnimation();
         }
@@ -190,6 +199,17 @@ public class UIManager : MonoBehaviour
     public void ShowEndBattleMenu(bool show){
         _menuPanel.SetActive(show); 
         _state = UIState.IN_MENU;
+    }
+
+    public void PlayerClosedMenu(){
+        DisplayOptions(false); 
+        ShowNoAttackActionsMenu(false); 
+        ChangeToPlayState(); 
+        
+    }
+
+    private void ChangeToPlayState(){
+        _state = UIState.PLAY; 
     }
 
     public bool IsMenuState(){

@@ -43,6 +43,7 @@ public class Tile : MonoBehaviour
     }
 
     public void HighlightTile(Color color){
+        Debug.Log("Highlighting tile"); 
         var tileRenderer = gameObject.GetComponent<Renderer>(); 
         _oldMatColor = gameObject.GetComponent<Renderer>().material.color; 
         tileRenderer.material.color = color; 

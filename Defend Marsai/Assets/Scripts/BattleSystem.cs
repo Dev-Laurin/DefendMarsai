@@ -99,6 +99,8 @@ public class BattleSystem : MonoBehaviour
     }
 
     private void unitTurnEnd(GameObject unit){
+        string unitName = unit.GetComponent<Pawn>().GetName(); 
+        Debug.Log($"Removing unit from available list: {unitName}");
         unitsUsed.Remove(unit); 
         unit.GetComponent<Pawn>().Deselect(); 
         ResetVars(); 
@@ -598,7 +600,8 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void PairUpButtonPressed(){
-        Debug.Log("In battle system."); 
+        Debug.Log("PairUp Button pressed: In battle system."); 
+        _uiManager.PlayerClosedMenu(); 
     }
 
     public IEnumerator AttackButtonPressed(){
@@ -607,28 +610,28 @@ public class BattleSystem : MonoBehaviour
             yield break; 
         }
         else{
+            Debug.Log("Player attacking");
             Pawn otherUnit = _selectedPawn2.GetComponent<Pawn>(); 
             yield return otherUnit.TakeDamage(_selectedPawn.GetComponent<Pawn>().GetStrength());
-            _uiManager.DisplayOptions(false); 
+            _uiManager.PlayerClosedMenu(); 
             unitTurnEnd(_selectedPawn); 
             EndPlayerTurn(); 
         }
     }
 
     public void EndUnitTurnButtonPressed(){
-        _uiManager.DisplayOptions(false); 
-        _uiManager.ShowNoAttackActionsMenu(false); 
+        _uiManager.PlayerClosedMenu(); 
         unitTurnEnd(_selectedPawn); 
         EndPlayerTurn(); 
     }
 
     public void PlayerFinishedUnit(GameObject pawn){
-        _uiManager.ShowNoAttackActionsMenu(false); 
+        _uiManager.PlayerClosedMenu(); 
         EndPlayerTurn(); 
     }
 
     public void CancelAction(){
-        _uiManager.DisplayOptions(false); 
+        _uiManager.PlayerClosedMenu(); 
         Pawn pawn = _selectedPawn.GetComponent<Pawn>();
         pawn.Deselect(); 
         _playerChoosingOptions = false; 
