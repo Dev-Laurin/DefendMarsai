@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq; 
 
 
 public class Pawn : MonoBehaviour
@@ -16,7 +17,7 @@ public class Pawn : MonoBehaviour
     [SerializeField] private int _fatigue; 
     [SerializeField] private int _maxFatigue; 
     [SerializeField] private int _hp; 
-    [SerializeField] private int _range; 
+    [SerializeField] private List<int> _range = new List<int>(); 
     [SerializeField] private int _maxHP; 
 
     //selection
@@ -97,8 +98,8 @@ public class Pawn : MonoBehaviour
     // }
 
     public bool UnitInRange(Pawn unit){        
-        var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range, _battleSystem.FindNeighbors); 
-        return path.Count <= _range; 
+        var path = PathFinding.DijkstraWithGoal(GetTile(), unit.GetTile(), _range.Last(), _battleSystem.FindNeighbors); 
+        return _range.Contains(path.Count); 
     }
 
     public IEnumerator MoveToTileViaPath(Queue<Tile> path){
@@ -227,7 +228,7 @@ public class Pawn : MonoBehaviour
         return _name; 
     }
 
-    public int GetRange(){
+    public List<int> GetRange(){
         return _range; 
     }
 

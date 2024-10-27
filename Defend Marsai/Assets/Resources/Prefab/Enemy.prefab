@@ -128,7 +128,7 @@ MonoBehaviour:
   _fatigue: 0
   _maxFatigue: 3
   _hp: 25
-  _range: 1
+  _range: 01000000
   _maxHP: 25
   _portrait: {fileID: 0}
   _portraitImage: {fileID: 21300000, guid: 03e9680205b5946b49536845358882a4, type: 3}

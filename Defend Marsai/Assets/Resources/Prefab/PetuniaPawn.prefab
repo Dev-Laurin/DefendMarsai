@@ -133,7 +133,7 @@ MonoBehaviour:
   _fatigue: 0
   _maxFatigue: 3
   _hp: 15
-  _range: 2
+  _range: 02000000
   _maxHP: 15
   _portrait: {fileID: 0}
   _portraitImage: {fileID: -1231279166, guid: 8f524b860a60b46178f0688322882e4c, type: 3}
