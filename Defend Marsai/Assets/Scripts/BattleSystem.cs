@@ -33,6 +33,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private int _width = 10, _height = 10; 
     private List<List<GameObject>> _map; 
     private List<List<bool>> _mapPos; 
+    private List<List<int>> _highlightedTilesMap; 
 
     //pawns
     private List<GameObject> _playerPawns; 
@@ -63,6 +64,7 @@ public class BattleSystem : MonoBehaviour
     public void StartBattle(){
         _map = new List<List<GameObject>>();
         _mapPos = new List<List<bool>>(); 
+        _highlightedTilesMap = new List<List<int>>(); 
         _playerPawns = new List<GameObject>(); 
         _enemyPawns = new List<GameObject>(); 
         _gameManager = gameObject.GetComponent<GameManager>(); 
@@ -187,6 +189,7 @@ public class BattleSystem : MonoBehaviour
         for(int x = 0; x < _width; x++){
             _map.Add(new List<GameObject>()); 
             _mapPos.Add(new List<bool>()); 
+            _highlightedTilesMap.Add(new List<int>()); 
             for(int z = 0; z < _height; z++){
                 var spawnedTile = MonoBehaviour.Instantiate(_tile, new Vector3(x, 0.0f, z), Quaternion.identity); 
                 spawnedTile.name = $"Tile {x} {z}"; 
@@ -195,6 +198,7 @@ public class BattleSystem : MonoBehaviour
                 spawnedTileComponent.SetZCoord(z); 
                 _map[x].Add(spawnedTile); 
                 _mapPos[x].Add(false); 
+                _highlightedTilesMap[x].Add(0); 
             }
         }
     }
@@ -487,7 +491,9 @@ public class BattleSystem : MonoBehaviour
     }
 
     public void HighlightAvailableTiles(List<Tile> tiles){ 
+        
         foreach(Tile tile in tiles){
+            _highlightedTilesMap[tile.GetXCoord()][tile.GetZCoord()] += 1; 
             tile.ChangeTilesMat(_availableMat, 0); 
             tile.SetSelection(true); 
         }
@@ -495,8 +501,11 @@ public class BattleSystem : MonoBehaviour
 
     public void DeHighlightTiles(){
         foreach(Tile tile in _availableTiles){
-            tile.RevertToOriginalTilesMat(); 
-            tile.SetSelection(false); 
+            _highlightedTilesMap[tile.GetXCoord()][tile.GetZCoord()] -= 1; 
+            if(_highlightedTilesMap[tile.GetXCoord()][tile.GetZCoord()] < 1){
+                tile.RevertToOriginalTilesMat(); 
+                tile.SetSelection(false); 
+            }
         }
     }
 
@@ -586,6 +595,10 @@ public class BattleSystem : MonoBehaviour
             resetUnitsUsed(); 
             StartCoroutine(EnemyTurn());
         }
+    }
+
+    public void PairUpButtonPressed(){
+        Debug.Log("In battle system."); 
     }
 
     public IEnumerator AttackButtonPressed(){

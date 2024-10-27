@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
         _battleSystem.RestartBattle(); 
     }
 
+    public void PairUpButtonPressed(){
+        Debug.Log("Pair Up pressed"); 
+        _battleSystem.PairUpButtonPressed(); 
+    }
+
     public void QuitButtonPressed(){
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false; 
